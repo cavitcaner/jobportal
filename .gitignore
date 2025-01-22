@@ -3,3 +3,16 @@
 ################################################################################
 
 /.vs/JobPortal/v17/.suo
+
+# Ocelot API Gateway
+ApiGW/**/bin/
+ApiGW/**/obj/
+
+# API Projects
+APIs/**/bin/
+APIs/**/obj/
+/.vs/JobPortal/DesignTimeBuild/.dtbcache.v2
+/.vs/JobPortal/v17/.futdcache.v2
+*.txt
+*.1
+/.vs/JobPortal
