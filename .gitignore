@@ -16,3 +16,6 @@ APIs/**/obj/
 *.txt
 *.1
 /.vs/JobPortal
+*.suo
+*.vsidx
+*.lock
