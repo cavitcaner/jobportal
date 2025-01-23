@@ -1,0 +1,10 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/jobs",
+      "UpstreamPathTemplate": "/jobs",
+      "UpstreamHttpMethod": [ "GET" ],
+      "ServiceName": "JobPostingService"
+    }
+  ]
+} 

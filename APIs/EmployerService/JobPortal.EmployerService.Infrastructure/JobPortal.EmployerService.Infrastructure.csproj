@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JobPortal.EmployerService.Application\JobPortal.EmployerService.Application.csproj" />
+    <ProjectReference Include="..\JobPortal.EmployerService.Persistence\JobPortal.EmployerService.Persistence.csproj" />
+    <PackageReference Include="VaultSharp" Version="1.13.0" />
+  </ItemGroup>
+
+</Project>

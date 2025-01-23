@@ -1,0 +1,10 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/employers",
+      "UpstreamPathTemplate": "/employers",
+      "UpstreamHttpMethod": [ "GET" ],
+      "ServiceName": "EmployerService"
+    }
+  ]
+} 
