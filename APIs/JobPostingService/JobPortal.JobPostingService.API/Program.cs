@@ -1,8 +1,11 @@
 
 using JobPortal.Core.Configuration;
+using JobPortal.Core.Events;
 using JobPortal.JobPostingService.Application.Extensions;
 using JobPortal.JobPostingService.Infrastructure.Extensions;
 using JobPortal.JobPostingService.Infrastructure.Persistence;
+using JobPortal.JobPostingService.Persistence.EventHandlers;
+using JobPortal.JobPostingService.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using VaultSharp;
 using VaultSharp.V1.AuthMethods.Token;
@@ -21,9 +24,16 @@ namespace JobPortal.JobPostingService.API
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddMediatR(cfg => {
+                cfg.RegisterServicesFromAssemblies(
+                    typeof(Program).Assembly,
+                    typeof(IEvent).Assembly
+                );
+            }); 
             builder.Services.AddApplicationServices();
             builder.Services.AddInfrastructureServices();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddPersistenceServices();
             builder.Services.AddDbContext<JobPostingDbContext>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),

@@ -1,24 +1,28 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using JobPortal.JobPostingService.Application.Interfaces;
+using JobPortal.JobPostingService.Application.DTOs;
 
 namespace JobPortal.JobPostingService.Application.Features.Benefits.Queries.GetBenefitList
 {
-    public class GetBenefitListQueryHandler : IRequestHandler<GetBenefitListQuery, List<BenefitListDto>>
+    public class GetBenefitListQuery : IRequest<List<BenefitDto>>
     {
-        private readonly  _context;
+    }
+    public class GetBenefitListQueryHandler : IRequestHandler<GetBenefitListQuery, List<BenefitDto>>
+    {
+        private readonly IBenefitService _benefitService;
         private readonly IMapper _mapper;
 
-        public GetBenefitListQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetBenefitListQueryHandler(IBenefitService benefitService, IMapper mapper)
         {
-            _context = context;
+            _benefitService = benefitService;
             _mapper = mapper;
         }
 
-        public async Task<List<BenefitListDto>> Handle(GetBenefitListQuery request, CancellationToken cancellationToken)
+        public async Task<List<BenefitDto>> Handle(GetBenefitListQuery request, CancellationToken cancellationToken)
         {
-            var benefits = await _context.Benefits.ToListAsync(cancellationToken);
-            return _mapper.Map<List<BenefitListDto>>(benefits);
+            var benefits = await _benefitService.GetAllBenefitsAsync();
+            return _mapper.Map<List<BenefitDto>>(benefits);
         }
     }
 } 

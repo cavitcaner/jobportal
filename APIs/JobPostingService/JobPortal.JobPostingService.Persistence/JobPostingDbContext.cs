@@ -18,5 +18,14 @@ namespace JobPortal.JobPostingService.Infrastructure.Persistence
         public DbSet<Position> Positions { get; set; }
         public DbSet<Benefit> Benefits { get; set; }
         public DbSet<WorkingMethod> WorkingMethods { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new BenefitSeedConfiguration());
+            modelBuilder.ApplyConfiguration(new PositionSeedConfiguration());
+            modelBuilder.ApplyConfiguration(new WorkingMethodSeedConfiguration());
+        }
     }
 }

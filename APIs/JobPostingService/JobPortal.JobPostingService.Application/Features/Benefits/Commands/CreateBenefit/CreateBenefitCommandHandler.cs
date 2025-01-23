@@ -4,7 +4,7 @@ using JobPortal.JobPostingService.Application.Interfaces;
 
 namespace JobPortal.JobPostingService.Application.Features.Benefits.Commands.CreateBenefit
 {
-    public class CreateBenefitCommandHandler : IRequestHandler<CreateBenefitCommand, int>
+    public class CreateBenefitCommandHandler : IRequestHandler<CreateBenefitCommand, Guid>
     {
         private readonly IBenefitService _benefitService;
 
@@ -13,7 +13,7 @@ namespace JobPortal.JobPostingService.Application.Features.Benefits.Commands.Cre
             _benefitService = benefitService;
         }
 
-        public async Task<int> Handle(CreateBenefitCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateBenefitCommand request, CancellationToken cancellationToken)
         {
             var benefit = new Benefit
             {

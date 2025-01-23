@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JobPortal.JobPostingService.Persistence.Migrations
 {
     [DbContext(typeof(JobPostingDbContext))]
-    [Migration("20250123163047_dataSeeds")]
-    partial class dataSeeds
+    [Migration("20250123223055_dbInit")]
+    partial class dbInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,21 +25,36 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("BenefitJobPost", b =>
+                {
+                    b.Property<Guid>("BenefitsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("JobPostsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("BenefitsId", "JobPostsId");
+
+                    b.HasIndex("JobPostsId");
+
+                    b.ToTable("BenefitJobPost");
+                });
+
             modelBuilder.Entity("JobPortal.JobPostingService.Domain.Entities.Benefit", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -48,43 +63,43 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("f1781e55-1a1e-4506-8462-e46f2602f0fa"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Özel Sağlık Sigortası"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("846fe540-1e2a-410a-b96b-9125cef65d30"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Yemek Kartı"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("7d461f4b-7433-4290-9739-62d2c7d0e1cc"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Servis"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = new Guid("92209f09-387a-49dc-be08-9c5e092b8f72"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Esnek Çalışma Saatleri"
                         },
                         new
                         {
-                            Id = 5,
+                            Id = new Guid("6fd71369-623d-42ad-b1b7-bb7c0fb9807b"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Uzaktan Çalışma"
                         },
                         new
                         {
-                            Id = 6,
+                            Id = new Guid("53c068c9-f42b-41e7-ba66-3042fa76d8ea"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Yıllık İzin"
                         },
                         new
                         {
-                            Id = 7,
+                            Id = new Guid("97ac4390-ee4c-405c-9dfb-d0ceed7cddd0"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Eğitim Desteği"
                         });
@@ -96,14 +111,14 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int?>("BenefitsId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
@@ -113,16 +128,21 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                     b.Property<Guid>("EmployerId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<int?>("PositionId")
                         .HasColumnType("integer");
 
-                    b.Property<float?>("Salary")
-                        .HasColumnType("real");
+                    b.Property<Guid?>("PositionId1")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal?>("Salary")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -130,32 +150,33 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                     b.Property<int?>("WorkingMethodId")
                         .HasColumnType("integer");
 
+                    b.Property<Guid?>("WorkingMethodId1")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("BenefitsId");
+                    b.HasIndex("PositionId1");
 
-                    b.HasIndex("PositionId");
-
-                    b.HasIndex("WorkingMethodId");
+                    b.HasIndex("WorkingMethodId1");
 
                     b.ToTable("JobPosts");
                 });
 
             modelBuilder.Entity("JobPortal.JobPostingService.Domain.Entities.Position", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -164,43 +185,43 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("81b645c8-f5a5-4568-a556-6364e6ec3b26"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Yazılım Geliştirici"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("13ff991b-ccbc-4438-9892-0a33ca338950"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Kıdemli Yazılım Geliştirici"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("d103c194-052a-4796-bd1b-81d70dc87101"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "İş Analisti"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = new Guid("d76aef2d-2666-4f0f-9ab8-29b3b64bc241"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Proje Yöneticisi"
                         },
                         new
                         {
-                            Id = 5,
+                            Id = new Guid("b3357633-d0e4-4360-8cf6-322f3cc2a373"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "DevOps Mühendisi"
                         },
                         new
                         {
-                            Id = 6,
+                            Id = new Guid("886fe6a0-41ee-4091-af37-b47f44bb93e4"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "UI/UX Tasarımcı"
                         },
                         new
                         {
-                            Id = 7,
+                            Id = new Guid("26c5c218-8b8e-4c77-b2d3-0a4e3258ee15"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Test Mühendisi"
                         });
@@ -208,19 +229,19 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
 
             modelBuilder.Entity("JobPortal.JobPostingService.Domain.Entities.WorkingMethod", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -229,57 +250,66 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("1da27eef-d85c-41cb-9a89-af5881f3a5c1"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Tam Zamanlı"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("b47aef00-3343-4436-9d7f-d52683ce4cf6"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Yarı Zamanlı"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("9f930531-9ef9-4d3e-bb49-0ae2bf8129d3"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Uzaktan"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = new Guid("a6f5f822-51cc-4701-a7c2-eb25d47c9ae5"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Hibrit"
                         },
                         new
                         {
-                            Id = 5,
+                            Id = new Guid("22636d32-03f2-45ff-9519-b8b164fc39b2"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Stajyer"
                         },
                         new
                         {
-                            Id = 6,
+                            Id = new Guid("08a6ecee-2c9e-4939-b2ae-2cb1f8a27ac2"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Proje Bazlı"
                         });
                 });
 
+            modelBuilder.Entity("BenefitJobPost", b =>
+                {
+                    b.HasOne("JobPortal.JobPostingService.Domain.Entities.Benefit", null)
+                        .WithMany()
+                        .HasForeignKey("BenefitsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JobPortal.JobPostingService.Domain.Entities.JobPost", null)
+                        .WithMany()
+                        .HasForeignKey("JobPostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("JobPortal.JobPostingService.Domain.Entities.JobPost", b =>
                 {
-                    b.HasOne("JobPortal.JobPostingService.Domain.Entities.Benefit", "Benefits")
-                        .WithMany()
-                        .HasForeignKey("BenefitsId");
-
                     b.HasOne("JobPortal.JobPostingService.Domain.Entities.Position", "Position")
                         .WithMany()
-                        .HasForeignKey("PositionId");
+                        .HasForeignKey("PositionId1");
 
                     b.HasOne("JobPortal.JobPostingService.Domain.Entities.WorkingMethod", "WorkingMethod")
                         .WithMany()
-                        .HasForeignKey("WorkingMethodId");
-
-                    b.Navigation("Benefits");
+                        .HasForeignKey("WorkingMethodId1");
 
                     b.Navigation("Position");
 

@@ -1,5 +1,5 @@
 using AutoMapper;
-using JobPortal.JobPostingService.Application.Features.Benefits.Queries.GetBenefitList;
+using JobPortal.JobPostingService.Application.DTOs;
 using JobPortal.JobPostingService.Domain.Entities;
 
 namespace JobPortal.JobPostingService.Application.Common.Mappings
@@ -8,7 +8,7 @@ namespace JobPortal.JobPostingService.Application.Common.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<Benefit, BenefitListDto>();
+            CreateMap<Benefit, BenefitDto>();
         }
     }
 } 

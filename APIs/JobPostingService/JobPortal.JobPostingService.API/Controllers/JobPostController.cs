@@ -1,3 +1,6 @@
+using JobPortal.JobPostingService.Application.DTOs;
+using JobPortal.JobPostingService.Application.Interfaces;
+using JobPortal.JobPostingService.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobPortal.JobPostingService.API.Controllers
@@ -13,16 +16,10 @@ namespace JobPortal.JobPostingService.API.Controllers
             _logger = logger;
         }
 
-        //[HttpGet]
-        //public IEnumerable<WeatherForecast> Get()
+        //[HttpGet("search")]
+        //public async Task<ICollection<JobPostResponseDto>> SearchJobPostAsync()
         //{
-        //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //    {
-        //        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-        //        TemperatureC = Random.Shared.Next(-20, 55),
-        //        Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        //    })
-        //    .ToArray();
+
         //}
     }
 }

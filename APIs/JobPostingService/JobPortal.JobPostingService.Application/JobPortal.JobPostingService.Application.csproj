@@ -24,8 +24,4 @@
     <ProjectReference Include="..\JobPortal.JobPostingService.Domain\JobPortal.JobPostingService.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-  </ItemGroup>
-
 </Project> 

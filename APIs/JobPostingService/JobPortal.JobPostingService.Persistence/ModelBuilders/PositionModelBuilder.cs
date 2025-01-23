@@ -19,7 +19,6 @@ namespace JobPortal.JobPostingService.Persistence.ModelBuilders
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
             });
-            modelBuilder.ApplyConfiguration(new PositionSeedConfiguration());
         }
     }
 }

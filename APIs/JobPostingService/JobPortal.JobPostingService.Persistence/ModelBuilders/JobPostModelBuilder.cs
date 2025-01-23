@@ -17,14 +17,14 @@ namespace JobPortal.JobPostingService.Persistence.ModelBuilders
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Title).IsRequired().HasMaxLength(100);
-                entity.Property(e => e.Description).IsRequired();
+                entity.Property(e => e.Description).IsRequired().HasMaxLength(2000);
                 entity.Property(e => e.EmployerId).IsRequired();
-                entity.Property(e => e.CompanyName).IsRequired();
+                entity.Property(e => e.CompanyName).IsRequired().HasMaxLength(150);
                 entity.Property(e => e.CreatedDate).IsRequired();
 
                 entity.Property(e => e.Salary).IsRequired(false);
                 entity.Property(e => e.PositionId).IsRequired(false);
-                entity.Property(e => e.BenefitsId).IsRequired(false);
+                entity.HasMany(e => e.Benefits).WithMany().UsingEntity("PostBenefits");
                 entity.Property(e => e.WorkingMethodId).IsRequired(false);
             });
         }

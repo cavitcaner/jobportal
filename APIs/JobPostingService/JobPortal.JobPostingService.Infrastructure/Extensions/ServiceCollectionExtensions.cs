@@ -10,6 +10,7 @@ namespace JobPortal.JobPostingService.Infrastructure.Extensions
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IBenefitService, BenefitService>();
             services.AddScoped<IJobPostService, JobPostService>();
             services.AddScoped<IPositionService, PositionService>();
             services.AddScoped<IWorkingMethodService, WorkingMethodService>();

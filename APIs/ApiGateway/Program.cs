@@ -16,7 +16,6 @@ namespace ApiGateway
             builder.Configuration
                 .SetBasePath(builder.Environment.ContentRootPath)
                 .AddJsonFile("ocelot.json", optional: false, reloadOnChange: true)
-                .AddJsonFile("ocelot.identity.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("ocelot.employer.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("ocelot.jobposting.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"ocelot.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)

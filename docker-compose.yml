@@ -86,10 +86,10 @@ services:
         sleep 10;
         vault secrets enable -path=secret kv-v2 || true;
         vault kv put secret/JobPost \
-          ConnectionStrings.DefaultConnection="Host=localhost;Port=5432;Database=JobPosting;Username=postgres;Password=123456;" \
-          EmployerSettings.DefaultLimitOfJobPosts="2" \
+          ConnectionStrings:DefaultConnection="Host=localhost;Port=5432;Database=JobPosting;Username=postgres;Password=123456;" \
+          EmployerSettings:DefaultLimitOfJobPosts="2" \
           Elasticsearch:Url="http://localhost:9200" \
-          RabbitMQ.ConnectionString="amqp://admin:123456@localhost:5672"
+          RabbitMQ:ConnectionString="amqp://admin:123456@localhost:5672"
       '
 
 volumes:
