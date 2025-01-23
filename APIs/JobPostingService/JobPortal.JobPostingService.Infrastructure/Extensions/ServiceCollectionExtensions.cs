@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using JobPortal.Core.Repository;
+using JobPortal.JobPostingService.Application.Interfaces;
+using JobPortal.JobPostingService.Infrastructure.Services;
 
 namespace JobPortal.JobPostingService.Infrastructure.Extensions
 {
@@ -7,7 +9,10 @@ namespace JobPortal.JobPostingService.Infrastructure.Extensions
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
-            services.AddScoped(typeof(GenericRepository<>), typeof(IGenericRepository<>));
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IJobPostService, JobPostService>();
+            services.AddScoped<IPositionService, PositionService>();
+            services.AddScoped<IWorkingMethodService, WorkingMethodService>();
             return services;
         }
     }
