@@ -1,3 +1,4 @@
+using JobPortal.Core.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,10 +7,10 @@ namespace JobPortal.EmployerService.Persistence.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddPersistenceServices(this IServiceCollection services)
     {
-        services.AddDbContext<EmployerDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+        services.AddScoped<DbContext, EmployerDbContext>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }

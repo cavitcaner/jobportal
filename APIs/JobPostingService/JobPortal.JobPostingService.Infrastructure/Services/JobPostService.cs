@@ -17,14 +17,14 @@ namespace JobPortal.JobPostingService.Infrastructure.Services
             await _genericRepository.AddAsync(jobPost, cancellationToken);
         }
 
-        public async Task<JobPost> GetJobPostByIdAsync(Guid id)
+        public async Task<JobPost> GetJobPostByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _genericRepository.GetByIdAsync(id);
+            return await _genericRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<ICollection<JobPost>> GetAllJobPostsAsync()
+        public async Task<ICollection<JobPost>> GetAllJobPostsAsync(CancellationToken cancellationToken)
         {
-            return await _genericRepository.GetAllAsync();
+            return await _genericRepository.GetAllAsync(cancellationToken);
         }
     }
 } 

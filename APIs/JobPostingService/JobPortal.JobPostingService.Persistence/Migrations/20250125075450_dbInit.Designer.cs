@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JobPortal.JobPostingService.Persistence.Migrations
 {
     [DbContext(typeof(JobPostingDbContext))]
-    [Migration("20250123223055_dbInit")]
+    [Migration("20250125075450_dbInit")]
     partial class dbInit
     {
         /// <inheritdoc />
@@ -111,6 +111,9 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -128,14 +131,17 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                     b.Property<Guid>("EmployerId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("PositionId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("PositionId1")
+                    b.Property<Guid?>("PositionId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Requirements")
+                        .HasColumnType("text");
 
                     b.Property<decimal?>("Salary")
                         .HasColumnType("numeric");
@@ -147,17 +153,14 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("WorkingMethodId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("WorkingMethodId1")
+                    b.Property<Guid?>("WorkingMethodId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PositionId1");
+                    b.HasIndex("PositionId");
 
-                    b.HasIndex("WorkingMethodId1");
+                    b.HasIndex("WorkingMethodId");
 
                     b.ToTable("JobPosts");
                 });
@@ -305,11 +308,11 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                 {
                     b.HasOne("JobPortal.JobPostingService.Domain.Entities.Position", "Position")
                         .WithMany()
-                        .HasForeignKey("PositionId1");
+                        .HasForeignKey("PositionId");
 
                     b.HasOne("JobPortal.JobPostingService.Domain.Entities.WorkingMethod", "WorkingMethod")
                         .WithMany()
-                        .HasForeignKey("WorkingMethodId1");
+                        .HasForeignKey("WorkingMethodId");
 
                     b.Navigation("Position");
 

@@ -44,14 +44,14 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -108,15 +108,18 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -125,14 +128,20 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                     b.Property<Guid>("EmployerId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("PositionId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Location")
+                        .HasColumnType("text");
 
-                    b.Property<Guid?>("PositionId1")
+                    b.Property<Guid?>("PositionId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Requirements")
+                        .HasColumnType("text");
 
                     b.Property<decimal?>("Salary")
                         .HasColumnType("numeric");
@@ -142,19 +151,16 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("WorkingMethodId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("WorkingMethodId1")
+                    b.Property<Guid?>("WorkingMethodId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PositionId1");
+                    b.HasIndex("PositionId");
 
-                    b.HasIndex("WorkingMethodId1");
+                    b.HasIndex("WorkingMethodId");
 
                     b.ToTable("JobPosts");
                 });
@@ -166,14 +172,14 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -231,14 +237,14 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -302,11 +308,11 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                 {
                     b.HasOne("JobPortal.JobPostingService.Domain.Entities.Position", "Position")
                         .WithMany()
-                        .HasForeignKey("PositionId1");
+                        .HasForeignKey("PositionId");
 
                     b.HasOne("JobPortal.JobPostingService.Domain.Entities.WorkingMethod", "WorkingMethod")
                         .WithMany()
-                        .HasForeignKey("WorkingMethodId1");
+                        .HasForeignKey("WorkingMethodId");
 
                     b.Navigation("Position");
 

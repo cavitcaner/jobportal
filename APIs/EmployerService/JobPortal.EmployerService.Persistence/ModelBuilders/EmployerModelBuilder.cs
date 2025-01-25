@@ -16,11 +16,12 @@ namespace JobPortal.EmployerService.Persistence.ModelBuilders
             modelBuilder.Entity<Employer>(builder =>
             {
                 builder.HasKey(e => e.Id);
-                builder.Property(e => e.CompanyName).IsRequired();
+                builder.HasKey(e => e.IdentityRefId);
                 builder.Property(e => e.Address).IsRequired();
+                builder.Property(e => e.CompanyName).IsRequired();
                 builder.Property(e => e.LimitOfJobPosts).IsRequired();
                 builder.Property(e => e.PhoneNumber).IsRequired();
-                builder.HasKey(x => new { x.PhoneNumber, x.CompanyName });
+                builder.HasIndex(e => new { e.PhoneNumber, e.CompanyName }).IsUnique();
             });
         }
     }

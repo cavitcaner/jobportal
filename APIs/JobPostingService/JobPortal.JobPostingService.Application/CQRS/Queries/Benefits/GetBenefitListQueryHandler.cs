@@ -3,7 +3,7 @@ using AutoMapper;
 using JobPortal.JobPostingService.Application.Interfaces;
 using JobPortal.JobPostingService.Application.DTOs;
 
-namespace JobPortal.JobPostingService.Application.Features.Benefits.Queries.GetBenefitList
+namespace JobPortal.JobPostingService.Application.CQRS.Queries.Benefits
 {
     public class GetBenefitListQuery : IRequest<List<BenefitDto>>
     {
@@ -21,8 +21,8 @@ namespace JobPortal.JobPostingService.Application.Features.Benefits.Queries.GetB
 
         public async Task<List<BenefitDto>> Handle(GetBenefitListQuery request, CancellationToken cancellationToken)
         {
-            var benefits = await _benefitService.GetAllBenefitsAsync();
+            var benefits = await _benefitService.GetAllBenefitsAsync(cancellationToken);
             return _mapper.Map<List<BenefitDto>>(benefits);
         }
     }
-} 
+}

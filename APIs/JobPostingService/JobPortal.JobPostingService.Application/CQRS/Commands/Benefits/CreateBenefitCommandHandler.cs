@@ -2,8 +2,12 @@ using MediatR;
 using JobPortal.JobPostingService.Domain.Entities;
 using JobPortal.JobPostingService.Application.Interfaces;
 
-namespace JobPortal.JobPostingService.Application.Features.Benefits.Commands.CreateBenefit
+namespace JobPortal.JobPostingService.Application.CQRS.Commands.Benefits
 {
+    public class CreateBenefitCommand : IRequest<Guid>
+    {
+        public string Name { get; set; }
+    }
     public class CreateBenefitCommandHandler : IRequestHandler<CreateBenefitCommand, Guid>
     {
         private readonly IBenefitService _benefitService;
@@ -25,4 +29,4 @@ namespace JobPortal.JobPostingService.Application.Features.Benefits.Commands.Cre
             return benefit.Id;
         }
     }
-} 
+}

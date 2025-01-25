@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\JobPortal.EmployerService.Application\JobPortal.EmployerService.Application.csproj" />
     <ProjectReference Include="..\JobPortal.EmployerService.Persistence\JobPortal.EmployerService.Persistence.csproj" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.4" />
     <PackageReference Include="VaultSharp" Version="1.13.0" />
   </ItemGroup>
 

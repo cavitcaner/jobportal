@@ -7,11 +7,11 @@
       "Services": {
         "EmployerService": {
           "Host": "localhost",
-          "Port": 7218
+          "Port": "${EMPLOYER_SERVICE_PORT}"
         },
         "JobPostingService": {
           "Host": "localhost",
-          "Port": 7153
+          "Port": "${JOB_POSTING_SERVICE_PORT}"
         }
       }
     }

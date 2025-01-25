@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   vault:
     image: hashicorp/vault:latest
@@ -7,8 +5,8 @@ services:
     ports:
       - "8200:8200"
     environment:
-      - VAULT_ADDR=http://0.0.0.0:8200
-      - VAULT_API_ADDR=http://0.0.0.0:8200
+      - VAULT_ADDR=http://localhost:8200
+      - VAULT_API_ADDR=http://localhost:8200
       - VAULT_DEV_ROOT_TOKEN_ID=admin
     cap_add:
       - IPC_LOCK
@@ -79,14 +77,14 @@ services:
       vault:
         condition: service_healthy
     environment:
-      - VAULT_ADDR=http://vault:8200
+      - VAULT_ADDR=http://jobpost_vault:8200
       - VAULT_TOKEN=admin
     command: >
       /bin/sh -c '
         sleep 10;
         vault secrets enable -path=secret kv-v2 || true;
         vault kv put secret/JobPost \
-          ConnectionStrings:DefaultConnection="Host=localhost;Port=5432;Database=JobPosting;Username=postgres;Password=123456;" \
+          ConnectionStrings:DefaultConnection="Host=localhost;Port=5432;Database=JobPortal;Username=postgres;Password=123456;" \
           EmployerSettings:DefaultLimitOfJobPosts="2" \
           Elasticsearch:Url="http://localhost:9200" \
           RabbitMQ:ConnectionString="amqp://admin:123456@localhost:5672"
@@ -99,6 +97,6 @@ volumes:
   elasticsearch_data:
   rabbitmq_data:
 
-#networks:
-#  default:
-#    name: job-portal-network 
+networks:
+  default:
+    name: job-portal-network 

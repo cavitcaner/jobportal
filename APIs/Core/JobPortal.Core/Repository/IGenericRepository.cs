@@ -9,8 +9,8 @@ namespace JobPortal.Core.Repository
 {
     public interface IGenericRepository<T> where T : BaseEntity, new()
     {
-        Task<T> GetByIdAsync(Guid id);
-        Task<ICollection<T>> GetAllAsync();
+        Task<T> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+        Task<ICollection<T>> GetAllAsync(CancellationToken cancellationToken);
         Task AddAsync(T entity, CancellationToken cancellationToken);
         Task UpdateAsync(T entity, CancellationToken cancellationToken);
         Task DeleteAsync(Guid id, CancellationToken cancellationToken);

@@ -14,35 +14,31 @@ namespace JobPortal.Core.Repository
         public async Task AddAsync(T entity, CancellationToken cancellationToken)
         {
             _dbContext.Add<T>(entity);
-            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            var entity = await GetByIdAsync(id);
-            await DeleteAsync(entity, cancellationToken);
+            await GetByIdAsync(id, cancellationToken);
         }
         
         public async Task DeleteAsync(T entity, CancellationToken cancellationToken)
         {
             _dbContext.Remove<T>(entity);
-            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<ICollection<T>> GetAllAsync()
+        public async Task<ICollection<T>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await _dbContext.Set<T>().ToListAsync();
+            return await _dbContext.Set<T>().ToListAsync(cancellationToken);
         }
 
-        public async Task<T> GetByIdAsync(Guid id)
+        public async Task<T> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _dbContext.FindAsync<T>(id);
+            return await _dbContext.FindAsync<T>(id, cancellationToken);
         }
 
         public async Task UpdateAsync(T entity, CancellationToken cancellationToken)
         {
             _dbContext.Set<T>().Update(entity);
-            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

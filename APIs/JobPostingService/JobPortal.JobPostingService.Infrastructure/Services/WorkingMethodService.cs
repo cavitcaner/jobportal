@@ -1,6 +1,7 @@
 using JobPortal.Core.Repository;
 using JobPortal.JobPostingService.Application.Interfaces;
 using JobPortal.JobPostingService.Domain.Entities;
+using System.Threading;
 
 namespace JobPortal.JobPostingService.Infrastructure.Services
 {
@@ -17,14 +18,14 @@ namespace JobPortal.JobPostingService.Infrastructure.Services
             await _genericRepository.AddAsync(workingMethod, cancellationToken);
         }
 
-        public async Task<WorkingMethod> GetWorkingMethodByIdAsync(Guid id)
+        public async Task<WorkingMethod> GetWorkingMethodByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _genericRepository.GetByIdAsync(id);
+            return await _genericRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<ICollection<WorkingMethod>> GetAllWorkingMethodsAsync()
+        public async Task<ICollection<WorkingMethod>> GetAllWorkingMethodsAsync(CancellationToken cancellationToken)
         {
-            return await _genericRepository.GetAllAsync();
+            return await _genericRepository.GetAllAsync(cancellationToken);
         }
     }
 } 

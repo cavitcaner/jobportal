@@ -1,8 +1,19 @@
 {
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5000",
+    "DownstreamScheme": "http",
+    "ServiceDiscoveryProvider": {
+      "Type": "Static",
+      "Services": {
+        "EmployerService": {
+          "Host": "localhost",
+          "Port": 7134
+        },
+        "JobPostingService": {
+          "Host": "localhost",
+          "Port": 7283
+        }
+      }
     }
   }
 }

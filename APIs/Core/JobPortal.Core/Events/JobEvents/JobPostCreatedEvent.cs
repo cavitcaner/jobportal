@@ -8,8 +8,8 @@ namespace JobPortal.Core.Events.JobEvents
         public string Description { get; set; }
         public string CompanyName { get; set; }
         public decimal? Salary { get; set; }
-        public int? PositionId { get; set; }
-        public ICollection<int>? BenefitsId { get; set; }
-        public int? WorkingMethodId { get; set; }
+        public Guid? PositionId { get; set; }
+        public ICollection<Guid>? BenefitsId { get; set; }
+        public Guid? WorkingMethodId { get; set; }
     }
 } 

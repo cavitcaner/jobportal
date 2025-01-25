@@ -17,14 +17,14 @@ namespace JobPortal.JobPostingService.Infrastructure.Services
             await _genericRepository.AddAsync(benefit, cancellationToken);
         }
 
-        public async Task<Benefit> GetBenefitByIdAsync(Guid id)
+        public async Task<Benefit> GetBenefitByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _genericRepository.GetByIdAsync(id);
+            return await _genericRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<ICollection<Benefit>> GetAllBenefitsAsync()
+        public async Task<ICollection<Benefit>> GetAllBenefitsAsync(CancellationToken cancellationToken)
         {
-            return await _genericRepository.GetAllAsync();
+            return await _genericRepository.GetAllAsync(cancellationToken);
         }
     }
 }

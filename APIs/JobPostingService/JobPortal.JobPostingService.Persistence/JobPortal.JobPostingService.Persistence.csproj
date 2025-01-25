@@ -13,10 +13,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JobPortal.JobPostingService.Application\JobPortal.JobPostingService.Application.csproj" />
     <ProjectReference Include="..\JobPortal.JobPostingService.Domain\JobPortal.JobPostingService.Domain.csproj" />
   </ItemGroup>
 

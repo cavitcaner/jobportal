@@ -1,4 +1,5 @@
 using JobPortal.Core.Repository;
+using JobPortal.Core.UnitOfWork;
 using JobPortal.EmployerService.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,8 +9,9 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
+
+        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IEmployerService, Services.EmployerService>();
-        services.AddScoped(typeof(GenericRepository<>), typeof(IGenericRepository<>));
         return services;
     }
 }
