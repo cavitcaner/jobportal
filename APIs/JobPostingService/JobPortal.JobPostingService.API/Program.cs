@@ -14,6 +14,7 @@ using JobPortal.Core.UnitOfWork;
 using JobPortal.JobPostingService.Application.CQRS.Commands.JobPost;
 using System.Reflection;
 using JobPortal.JobPostingService.Application.Common.Mappings;
+using StackExchange.Redis;
 
 namespace JobPortal.JobPostingService.API
 {
@@ -31,27 +32,24 @@ namespace JobPortal.JobPostingService.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddMediatR(cfg => {
-                cfg.RegisterServicesFromAssemblies(
-                    typeof(Program).Assembly,
-                    typeof(IEvent).Assembly
-                );
+                cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
             });
             builder.Services.AddApplicationServices();
             builder.Services.AddInfrastructureServices();
-            builder.Services.AddPersistenceServices();
+            builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddSingleton<IElasticClient>(sp =>
             {
                 var elasticUrl = builder.Configuration.GetValue<string>("Elasticsearch:Url");
                 var settings = new ConnectionSettings(new Uri(elasticUrl))
                     .DefaultIndex("default-index");
                 return new ElasticClient(settings);
-            }); 
-            builder.Services.AddDbContext<JobPostingDbContext>(options =>
-            {
-                AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-
+            builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                var redisConnection = configuration.GetValue<string>("Redis:ConnectionString");
+                return ConnectionMultiplexer.Connect(redisConnection);
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

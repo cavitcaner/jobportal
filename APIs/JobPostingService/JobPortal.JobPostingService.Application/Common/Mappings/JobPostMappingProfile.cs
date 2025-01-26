@@ -23,6 +23,8 @@ namespace JobPortal.JobPostingService.Application.Common.Mappings
             CreateMap<JobPostElasticModel, JobPostResponseDto>();
             CreateMap<JobPost, JobPostElasticModel>()
                 .ForMember(x => x.PostedDate, x => x.MapFrom(c => c.CreatedDate))
+                .ForMember(x => x.WorkingMethod, x => x.MapFrom(c => c.WorkingMethod.Name))
+                .ForMember(x => x.Position, x => x.MapFrom(c => c.Position.Name))
                 .ForMember(x => x.Benefits, x => x.MapFrom(c => c.Benefits == null ? new List<string>() : c.Benefits.Select(c => c.Name).ToList()))
                 .ReverseMap();
         }

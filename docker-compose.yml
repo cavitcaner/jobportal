@@ -84,11 +84,115 @@ services:
         sleep 10;
         vault secrets enable -path=secret kv-v2 || true;
         vault kv put secret/JobPost \
-          ConnectionStrings:DefaultConnection="Host=localhost;Port=5432;Database=JobPortal;Username=postgres;Password=123456;" \
+          ConnectionStrings:DefaultConnection="Host=jobpost_postgres-db;Port=5432;Database=JobPortal;Username=postgres;Password=123456;" \
           EmployerSettings:DefaultLimitOfJobPosts="2" \
-          Elasticsearch:Url="http://localhost:9200" \
-          RabbitMQ:ConnectionString="amqp://admin:123456@localhost:5672"
+          Elasticsearch:Url="http://jobpost_elasticsearch:9200" \
+          RabbitMQ:ConnectionString="amqp://admin:123456@jobpost_rabbitmq:5672" \
+          Redis:ConnectionString="jobpost_redis:6379"
       '
+
+  redis:
+    image: redis:latest
+    container_name: jobpost_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: >
+      sh -c '
+        redis-server --daemonize yes &&
+        sleep 1 &&
+        redis-cli SADD HateWords madara nanay parlak pinpon saksı gıcık gaga enayi düdük çakmak babaçko armut akmak arakçı &&
+        redis-server --daemonize no
+      '
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  employer-service:
+    image: ${DOCKER_REGISTRY-}employerservice
+    container_name: jobpost_employer-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - VAULT_ADDR=http://jobpost_vault:8200
+      - VAULT_TOKEN=admin
+    ports:
+      - "5001:80"
+    depends_on:
+      vault:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  jobposting-service:
+    image: ${DOCKER_REGISTRY-}jobpostingservice
+    container_name: jobpost_jobposting-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - VAULT_ADDR=http://jobpost_vault:8200
+      - VAULT_TOKEN=admin
+    ports:
+      - "5002:80"
+    depends_on:
+      vault:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  api-gateway:
+    image: ${DOCKER_REGISTRY-}apigateway
+    container_name: jobpost_api-gateway
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Release
+      - VAULT_ADDR=http://jobpost_vault:8200
+      - VAULT_TOKEN=admin
+      - APIGATEWAY_HOST=localhost
+      - APIGATEWAY_PORT=5000
+      - EMPLOYER_SERVICE_HOST=jobpost_employer-service
+      - EMPLOYER_SERVICE_PORT=5001
+      - JOB_POSTING_SERVICE_HOST=jobpost_jobposting-service
+      - JOB_POSTING_SERVICE_PORT=5002
+    depends_on:
+      vault:
+        condition: service_healthy
+      employer-service:
+        condition: service_healthy
+      jobposting-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   vault_data:
@@ -96,6 +200,7 @@ volumes:
   postgres_data:
   elasticsearch_data:
   rabbitmq_data:
+  redis_data:
 
 networks:
   default:

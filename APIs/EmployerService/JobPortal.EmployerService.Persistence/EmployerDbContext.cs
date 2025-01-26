@@ -1,5 +1,5 @@
 using JobPortal.Core;
-using JobPortal.EmployerService.Domain;
+using JobPortal.EmployerService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace JobPortal.EmployerService.Persistence;

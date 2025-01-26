@@ -1,10 +1,8 @@
 using AutoMapper;
 using FluentValidation;
-using JobPortal.Core.Repository;
 using JobPortal.Core.UnitOfWork;
 using JobPortal.JobPostingService.Application.DTOs;
 using JobPortal.JobPostingService.Application.DTOs.Elasticsearch;
-using JobPortal.JobPostingService.Application.Extensions;
 using JobPortal.JobPostingService.Application.Interfaces;
 using JobPortal.JobPostingService.Domain.Entities;
 using MediatR;
@@ -26,21 +24,17 @@ namespace JobPortal.JobPostingService.Application.CQRS.Commands.JobPost
         private readonly IMapper _mapper;
         private readonly IJobPostElasticService _jobPostElasticService;
         private readonly IJobPostService _jobPostService;
-        private readonly IBenefitService _benefitService;
 
         public CreateJobPostCommandHandler(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            IElasticClient elasticClient,
             IJobPostService jobPostService,
-            IJobPostElasticService jobPostElasticService,
-            IBenefitService benefitService)
+            IJobPostElasticService jobPostElasticService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _jobPostService = jobPostService;
             _jobPostElasticService = jobPostElasticService;
-            _benefitService = benefitService;
         }
 
         public async Task<Guid> Handle(CreateJobPostCommand request, CancellationToken cancellationToken)
@@ -57,8 +51,7 @@ namespace JobPortal.JobPostingService.Application.CQRS.Commands.JobPost
 
                 if (request.JobPost.Benefits?.Count > 0)
                 {
-                    var allBenefits = await _benefitService.GetAllBenefitsAsync(cancellationToken);
-                    jobPost.Benefits = allBenefits.Where(benefits => request.JobPost.Benefits.Contains(benefits.Id)).ToList();
+                    jobPost.Benefits = request.JobPost.Benefits.Select(x => new Benefit() { Id = x }).ToList();
                 }
 
                 await _jobPostService.CreateJobPostAsync(jobPost, cancellationToken);
@@ -74,7 +67,7 @@ namespace JobPortal.JobPostingService.Application.CQRS.Commands.JobPost
 
                 return jobPost.Id;
             }
-            catch(Exception ex) 
+            catch(Exception ex)
             {
                 await _unitOfWork.RollbackAsync(cancellationToken);
                 throw;

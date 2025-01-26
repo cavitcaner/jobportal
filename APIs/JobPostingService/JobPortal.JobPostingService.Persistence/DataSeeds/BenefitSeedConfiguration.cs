@@ -14,7 +14,7 @@ namespace JobPortal.JobPostingService.Persistence.DataSeeds
                 new Benefit { Id = Guid.Parse("7d461f4b-7433-4290-9739-62d2c7d0e1cc"), Name = "Servis" },
                 new Benefit { Id = Guid.Parse("92209f09-387a-49dc-be08-9c5e092b8f72"), Name = "Esnek Çalışma Saatleri" },
                 new Benefit { Id = Guid.Parse("6fd71369-623d-42ad-b1b7-bb7c0fb9807b"), Name = "Uzaktan Çalışma" },
-                new Benefit { Id = Guid.Parse("53c068c9-f42b-41e7-ba66-3042fa76d8ea"), Name = "Yıllık İzin" },
+                new Benefit { Id = Guid.Parse("53c068c9-f42b-41e7-ba66-3042fa76d8ea"), Name = "Mazeret İzin" },
                 new Benefit { Id = Guid.Parse("97ac4390-ee4c-405c-9dfb-d0ceed7cddd0"), Name = "Eğitim Desteği" }
             );                                 
         }

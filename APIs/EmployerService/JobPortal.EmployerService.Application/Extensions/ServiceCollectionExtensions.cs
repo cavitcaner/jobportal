@@ -1,9 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
-using JobPortal.Core.Repository;
 using FluentValidation;
 using System.Reflection;
-using JobPortal.JobPostingService.Application.Behaviors;
 using MediatR;
+using JobPortal.Core.Behaviors;
 
 namespace JobPortal.EmployerService.Application.Extensions
 {

@@ -1,5 +1,5 @@
 ﻿using JobPortal.Core.Configuration;
-using JobPortal.EmployerService.Domain;
+using JobPortal.EmployerService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

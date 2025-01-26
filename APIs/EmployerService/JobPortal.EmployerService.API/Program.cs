@@ -6,10 +6,7 @@ using JobPortal.Core.Configuration;
 using JobPortal.Core.Statics;
 using JobPortal.Core.UnitOfWork;
 using JobPortal.EmployerService.Application.Extensions;
-using JobPortal.Core.Events;
 using Nest;
-using JobPortal.EmployerService.Persistence;
-using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace JobPortal.EmployerService.API
@@ -32,31 +29,16 @@ namespace JobPortal.EmployerService.API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddMediatR(cfg => {
-                cfg.RegisterServicesFromAssemblies(
-                    typeof(Program).Assembly,
-                    typeof(IEvent).Assembly
-                );
+                cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
             });
+            builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddApplicationServices();
             builder.Services.AddInfrastructureServices();
-            builder.Services.AddPersistenceServices();
             builder.Services.AddSingleton<IElasticClient>(sp =>
             {
                 var elasticUrl = builder.Configuration.GetValue<string>("Elasticsearch:Url");
-                var settings = new ConnectionSettings(new Uri(elasticUrl))
-                    .DefaultIndex("default-index");
+                var settings = new ConnectionSettings(new Uri(elasticUrl)).DefaultIndex("default-index");
                 return new ElasticClient(settings);
-            });
-            builder.Services.AddDbContext<EmployerDbContext>(options =>
-            {
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
-                    npgsqlOptionsAction: opts =>
-                    {
-                        opts.EnableRetryOnFailure(
-                            maxRetryCount: 3,
-                            maxRetryDelay: TimeSpan.FromSeconds(30),
-                            errorCodesToAdd: null);
-                    });
             });
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

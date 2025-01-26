@@ -54,7 +54,7 @@ namespace JobPortal.JobPostingService.Application.CQRS.Commands.JobPost
 
                 var jobPost = await _jobPostService.GetJobPostByIdAsync(request.JobPost.Id, cancellationToken);
 
-                ExceptionHelper.ThrowIfNull(jobPost, "İlan bulunamadı!");
+                ExceptionHelper.ThrowIfNullOrEmpty(jobPost, "İlan bulunamadı!");
 
                 jobPost.ExpirationDate = request.JobPost.ExpirationDate ?? jobPost.ExpirationDate;
 

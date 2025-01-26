@@ -1,6 +1,6 @@
 ﻿using JobPortal.Core.Model;
 
-namespace JobPortal.EmployerService.Domain
+namespace JobPortal.EmployerService.Domain.Entities
 {
     public class Employer : BaseEntity
     {

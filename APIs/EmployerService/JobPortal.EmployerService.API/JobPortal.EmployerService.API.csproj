@@ -15,10 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\JobPortal.EmployerService.Infrastructure\JobPortal.EmployerService.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\JobPortal.EmployerService.Persistence\JobPortal.EmployerService.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

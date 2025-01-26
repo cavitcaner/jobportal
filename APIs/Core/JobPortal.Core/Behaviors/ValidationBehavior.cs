@@ -1,7 +1,7 @@
 using FluentValidation;
 using MediatR;
 
-namespace JobPortal.JobPostingService.Application.Behaviors
+namespace JobPortal.Core.Behaviors
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>

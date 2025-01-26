@@ -6,5 +6,10 @@
         {
             //public const string JobPostsElasticIndex = "jobposts";
         }
+
+        public class RedisKeys
+        {
+            public const string HateWordsRedisKey = "HateWords";
+        }
     }
 }

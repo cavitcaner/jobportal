@@ -14,7 +14,7 @@ namespace JobPortal.Core.Helpers
             if (condition)
                 throw new Exception(message);
         }
-        public static void ThrowIfNull(object obj, string message)
+        public static void ThrowIfNullOrEmpty(object? obj, string message)
         {
             ThrowIf(obj == null, message);
             ThrowIf(obj is string str && string.IsNullOrEmpty(str), message);

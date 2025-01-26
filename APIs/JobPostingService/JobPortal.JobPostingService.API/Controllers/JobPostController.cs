@@ -23,7 +23,7 @@ namespace JobPortal.JobPostingService.API.Controllers
         /// <param name="query"></param>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        [HttpPost("search")]
+        [HttpPost("/search")]
         public async Task<IActionResult> SearchJobPostAsync(SearchJobPostsQuery query, CancellationToken cancellation)
         {
             return Ok(await _mediator.Send(query, cancellation));
@@ -59,20 +59,32 @@ namespace JobPortal.JobPostingService.API.Controllers
         /// <param name="id">postjob.id</param>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
+        [HttpGet("/{id}")]
         public async Task<IActionResult> GetJobPostAsync(Guid id, CancellationToken cancellation)
         {
             return Ok(await _mediator.Send(new GetJobPostByIdQuery { Id = id }, cancellation));
         }
 
         /// <summary>
-        /// updates a new jobpost data from request body
+        /// updates a jobpost
         /// </summary>
         /// <param name="command"></param>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPut("/{id}")]
         public async Task<IActionResult> UpdateJobPostAsync(UpdateJobPostCommand command, CancellationToken cancellation)
+        {
+            await _mediator.Send(command, cancellation);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Creates mock data
+        /// </summary>
+        /// <param name="cancellation"></param>
+        /// <returns></returns>
+        [HttpPost("/create-mock")]
+        public async Task<IActionResult> CreatesMockJobPostsAsync(CreateMockJobPostCommand command, CancellationToken cancellation)
         {
             await _mediator.Send(command, cancellation);
             return Ok();

@@ -1,25 +1,29 @@
-﻿using JobPortal.Core.Repository;
-using JobPortal.Core.Statics;
+﻿using JobPortal.Core.Statics;
 using JobPortal.JobPostingService.Application.DTOs.Elasticsearch;
 using JobPortal.JobPostingService.Application.Interfaces;
 using Nest;
 using System.Reflection.Metadata;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.Extensions.Configuration;
+using JobPortal.Core.Redis;
+using JobPortal.JobPostingService.Infrastructure.Cache.Redis;
 
 namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
 {
     public class JobPostElasticService : IJobPostElasticService
     {
         private readonly IElasticClient _elasticClient;
-
-        public JobPostElasticService(IElasticClient elasticClient)
+        private const string _indexName = "jobposts";
+        private readonly HateWordsRedisService _hateWordsRedisService;
+        public JobPostElasticService(IElasticClient elasticClient, HateWordsRedisService hateWordsRedisService)
         {
             _elasticClient = elasticClient;
+            _hateWordsRedisService = hateWordsRedisService;
         }
 
         public async Task<JobPostElasticModel> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var response = await _elasticClient.GetAsync<JobPostElasticModel>(id, x => x.Index<JobPostElasticModel>(), cancellationToken);
+            var response = await _elasticClient.GetAsync<JobPostElasticModel>(id, x => x.Index(_indexName), cancellationToken);
 
             if (!response.IsValid)
             {
@@ -35,7 +39,12 @@ namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
 
         public async Task IndexDataAsync(JobPostElasticModel entity, CancellationToken cancellationToken)
         {
-            var response = await _elasticClient.IndexDocumentAsync(entity);
+            List<string> hateWordList = await _hateWordsRedisService.GetListAsync();
+
+            entity.CalculateJobPoint(hateWordList);
+
+            var response = await _elasticClient.IndexAsync(entity, i => i .Index(_indexName), cancellationToken);
+
             if (!response.IsValid)
             {
                 throw new Exception($"Failed to index document: {response.OriginalException.Message}");
@@ -45,6 +54,7 @@ namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
         public async Task<IEnumerable<JobPostElasticModel>> SearchDataAsync(string query, CancellationToken cancellationToken)
         {
             var searchResponse = await _elasticClient.SearchAsync<JobPostElasticModel>(s => s
+                .Index(_indexName)
                 .Query(q => q
                     .Bool(b => b
                         .Must(
@@ -60,6 +70,7 @@ namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
                         )
                     )
                 )
+                .Size(100)
             );
 
             if (!searchResponse.IsValid)
@@ -74,11 +85,13 @@ namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
         public async Task<IEnumerable<JobPostElasticModel>> GetAllDataAsync(CancellationToken cancellationToken)
         {
             var searchResponse = await _elasticClient.SearchAsync<JobPostElasticModel>(s => s
+                .Index(_indexName)
                 .Query(x => x.DateRange(r => r
                                 .Field(f => f.ExpirationDate)
                                 .GreaterThanOrEquals(DateTime.UtcNow)
                     )
                 )
+                .Size(100)
             );
 
             if (!searchResponse.IsValid)

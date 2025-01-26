@@ -3,8 +3,32 @@
     {
       "DownstreamPathTemplate": "/api/employers",
       "UpstreamPathTemplate": "/employers",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "ServiceName": "EmployerService"
+    },
+    {
+      "DownstreamPathTemplate": "/api/employers/{id}",
+      "UpstreamPathTemplate": "/employers/{id}",
+      "UpstreamHttpMethod": [ "GET", "PUT" ],
+      "ServiceName": "EmployerService"
+    },
+    {
+      "DownstreamPathTemplate": "/api/employers/{id}/details",
+      "UpstreamPathTemplate": "/employers/{id}/details",
       "UpstreamHttpMethod": [ "GET" ],
       "ServiceName": "EmployerService"
     }
-  ]
-} 
+  ],
+  "GlobalConfiguration": {
+    "DownstreamScheme": "http",
+    "ServiceDiscoveryProvider": {
+      "Type": "Static",
+      "Services": {
+        "EmployerService": {
+          "Host": "${Services.EmployerService.Host}",
+          "Port": "${Services.EmployerService.Port}"
+        }
+      }
+    }
+  }
+}

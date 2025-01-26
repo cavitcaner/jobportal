@@ -1,6 +1,7 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-
+using Ocelot.Provider.Eureka;
+//using Ocelot.Provider.ConfigurationProvider;
 namespace ApiGateway
 {
     public class Program
@@ -15,9 +16,9 @@ namespace ApiGateway
             builder.Services.AddEndpointsApiExplorer();
             builder.Configuration
                 .SetBasePath(builder.Environment.ContentRootPath)
+                .AddJsonFile($"ocelot.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
                 .AddJsonFile("ocelot.employer.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("ocelot.jobposting.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"ocelot.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables();
             builder.Services.AddOcelot();
             builder.Services.AddSwaggerGen();

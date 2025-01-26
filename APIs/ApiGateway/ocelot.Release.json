@@ -1,0 +1,19 @@
+{
+  "GlobalConfiguration": {
+    "BaseUrl": "http://${APIGATEWAY_HOST}:${APIGATEWAY_PORT}",
+    "DownstreamScheme": "http",
+    "ServiceDiscoveryProvider": {
+      "Type": "Static",
+      "Services": {
+        "EmployerService": {
+          "Host": "${EMPLOYER_SERVICE_HOST}",
+          "Port": "${EMPLOYER_SERVICE_PORT}"
+        },
+        "JobPostingService": {
+          "Host": "${JOB_POSTING_SERVICE_HOST}",
+          "Port": "${JOB_POSTING_SERVICE_PORT}"
+        }
+      }
+    }
+  }
+}

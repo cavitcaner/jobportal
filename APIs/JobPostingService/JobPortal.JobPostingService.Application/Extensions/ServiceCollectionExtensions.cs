@@ -1,9 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
-using JobPortal.Core.Repository;
 using FluentValidation;
 using System.Reflection;
-using JobPortal.JobPostingService.Application.Behaviors;
-using JobPortal.JobPostingService.Application.CQRS.Commands.JobPost;
+using JobPortal.Core.Behaviors;
 using MediatR;
 using JobPortal.JobPostingService.Application.Common.Mappings;
 
@@ -13,7 +11,7 @@ namespace JobPortal.JobPostingService.Application.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(JobPostMappingProfile).Assembly);
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(cfg => {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
