@@ -11,7 +11,6 @@ namespace JobPortal.JobPostingService.Application.Common.Mappings
     {
         public JobPostMappingProfile()
         {
-            CreateMap<Benefit, BenefitDto>();
             CreateMap<JobPostCreatedEvent, JobPost>();
 
             CreateMap<CreateJobPostRequestDto, JobPost>()

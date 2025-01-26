@@ -48,7 +48,7 @@ namespace JobPortal.JobPostingService.API
             }); 
             builder.Services.AddDbContext<JobPostingDbContext>(options =>
             {
-                AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);//utc için
+                AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 

@@ -37,8 +37,6 @@ namespace JobPortal.JobPostingService.Infrastructure.EventHandlers
                 //elasticJobPost.WorkingMethod = workingMethod?.Name;
                 //elasticJobPost.Benefits = benefits?.Select(x => x.Name).ToList();
                 //await _elasticClient.UpdateAsync(elasticJobPost);
-
-                await _elasticClient.IndexDocumentAsync(new JobPostElasticModel { }, cancellationToken);
             }
         }
 
