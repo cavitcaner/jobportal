@@ -1,19 +1,96 @@
 {
-  "GlobalConfiguration": {
-    "BaseUrl": "http://${APIGATEWAY_HOST}:${APIGATEWAY_PORT}",
-    "DownstreamScheme": "http",
-    "ServiceDiscoveryProvider": {
-      "Type": "Static",
-      "Services": {
-        "EmployerService": {
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/employers",
+      "UpstreamPathTemplate": "/employers",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "DownstreamHostAndPorts": [
+        {
           "Host": "${EMPLOYER_SERVICE_HOST}",
           "Port": "${EMPLOYER_SERVICE_PORT}"
-        },
-        "JobPostingService": {
+        }
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/employers/{id}",
+      "UpstreamPathTemplate": "/employers/{id}",
+      "UpstreamHttpMethod": [ "GET", "PUT" ],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "${EMPLOYER_SERVICE_HOST}",
+          "Port": "${EMPLOYER_SERVICE_PORT}"
+        }
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/employers/{id}/details",
+      "UpstreamPathTemplate": "/employers/{id}/details",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "${EMPLOYER_SERVICE_HOST}",
+          "Port": "${EMPLOYER_SERVICE_PORT}"
+        }
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/jobs",
+      "UpstreamPathTemplate": "/jobs",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "DownstreamHostAndPorts": [
+        {
           "Host": "${JOB_POSTING_SERVICE_HOST}",
           "Port": "${JOB_POSTING_SERVICE_PORT}"
         }
-      }
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/jobs/{id}",
+      "UpstreamPathTemplate": "/jobs/{id}",
+      "UpstreamHttpMethod": [ "GET", "PUT" ],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "${JOB_POSTING_SERVICE_HOST}",
+          "Port": "${JOB_POSTING_SERVICE_PORT}"
+        }
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/jobs/search",
+      "UpstreamPathTemplate": "/jobs/search",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "${JOB_POSTING_SERVICE_HOST}",
+          "Port": "${JOB_POSTING_SERVICE_PORT}"
+        }
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/jobs/create-mock",
+      "UpstreamPathTemplate": "/jobs/create-mock",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "${JOB_POSTING_SERVICE_HOST}",
+          "Port": "${JOB_POSTING_SERVICE_PORT}"
+        }
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/hate-words",
+      "UpstreamPathTemplate": "/hate-words",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "${JOB_POSTING_SERVICE_HOST}",
+          "Port": "${JOB_POSTING_SERVICE_PORT}"
+        }
+      ]
     }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:7084",
+    "DownstreamScheme": "http"
   }
 }

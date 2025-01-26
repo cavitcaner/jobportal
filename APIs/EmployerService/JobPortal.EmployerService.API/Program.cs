@@ -17,7 +17,6 @@ namespace JobPortal.EmployerService.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Configuration 
             await ConfigureVault(builder);
 
             EmployerStatics.DefaultLimitOfJobPosts = builder.Configuration.GetSection("EmployerSettings:DefaultLimitOfJobPosts").Get<short>();
@@ -40,12 +39,10 @@ namespace JobPortal.EmployerService.API
                 var settings = new ConnectionSettings(new Uri(elasticUrl)).DefaultIndex("default-index");
                 return new ElasticClient(settings);
             });
-            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            //if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
@@ -54,7 +51,6 @@ namespace JobPortal.EmployerService.API
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

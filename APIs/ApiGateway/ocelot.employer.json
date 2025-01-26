@@ -18,17 +18,5 @@
       "UpstreamHttpMethod": [ "GET" ],
       "ServiceName": "EmployerService"
     }
-  ],
-  "GlobalConfiguration": {
-    "DownstreamScheme": "http",
-    "ServiceDiscoveryProvider": {
-      "Type": "Static",
-      "Services": {
-        "EmployerService": {
-          "Host": "${Services.EmployerService.Host}",
-          "Port": "${Services.EmployerService.Port}"
-        }
-      }
-    }
-  }
+  ]
 }

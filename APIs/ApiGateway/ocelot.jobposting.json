@@ -30,17 +30,5 @@
       "UpstreamHttpMethod": [ "GET", "POST" ],
       "ServiceName": "JobPostingService"
     }
-  ],
-  "GlobalConfiguration": {
-    "DownstreamScheme": "http",
-    "ServiceDiscoveryProvider": {
-      "Type": "Static",
-      "Services": {
-        "JobPostingService": {
-          "Host": "${Services.JobPostingService.Host}",
-          "Port": "${Services.JobPostingService.Port}"
-        }
-      }
-    }
-  }
+  ]
 } 
