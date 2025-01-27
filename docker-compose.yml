@@ -1,13 +1,13 @@
 services:
   vault:
     image: hashicorp/vault:latest
-    container_name: jobpost_vault
+    container_name: jobportal_vault
     ports:
       - "8200:8200"
     environment:
-      - VAULT_ADDR=http://jobpost_vault:8200
-      - VAULT_API_ADDR=http://jobpost_vault:8200
       - VAULT_DEV_ROOT_TOKEN_ID=admin
+      - VAULT_API_ADDR=http://0.0.0.0:8200
+      - VAULT_ADDR=http://0.0.0.0:8200
     cap_add:
       - IPC_LOCK
     volumes:
@@ -22,7 +22,7 @@ services:
 
   postgres:
     image: postgres:latest
-    container_name: jobpost_postgres-db
+    container_name: jobportal_postgres-db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123456
@@ -39,7 +39,7 @@ services:
 
   elasticsearch:
     image: elasticsearch:7.17.27
-    container_name: jobpost_elasticsearch
+    container_name: jobportal_elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -49,14 +49,14 @@ services:
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     healthcheck:
-      test: ["CMD-SHELL", "curl -s http://jobpost_elasticsearch:9200/_cluster/health | grep -vq '\"status\":\"red\"'"]
+      test: ["CMD-SHELL", "curl -s http://jobportal_elasticsearch:9200/_cluster/health | grep -vq '\"status\":\"red\"'"]
       interval: 30s
       timeout: 10s
       retries: 3
 
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: jobpost_rabbitmq
+    container_name: jobportal_rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=123456
@@ -77,23 +77,23 @@ services:
       vault:
         condition: service_healthy
     environment:
-      - VAULT_ADDR=http://jobpost_vault:8200
+      - VAULT_ADDR=http://jobportal_vault:8200
       - VAULT_TOKEN=admin
     command: >
       /bin/sh -c '
-        sleep 10;
+        sleep 2;
         vault secrets enable -path=secret kv-v2 || true;
         vault kv put secret/JobPost \
-          ConnectionStrings:DefaultConnection="Host=jobpost_postgres-db;Port=5432;Database=JobPortal;Username=postgres;Password=123456;" \
+          ConnectionStrings:DefaultConnection="Host=jobportal_postgres-db;Port=5432;Database=JobPortal;Username=postgres;Password=123456;" \
           EmployerSettings:DefaultLimitOfJobPosts="2" \
-          Elasticsearch:Url="http://jobpost_elasticsearch:9200" \
-          RabbitMQ:ConnectionString="amqp://admin:123456@jobpost_rabbitmq:5672" \
-          Redis:ConnectionString="jobpost_redis:6379"
+          Elasticsearch:Url="http://jobportal_elasticsearch:9200" \
+          RabbitMQ:ConnectionString="amqp://admin:123456@jobportal_rabbitmq:5672" \
+          Redis:ConnectionString="jobportal_redis:6379"
       '
 
   redis:
     image: redis:latest
-    container_name: jobpost_redis
+    container_name: jobportal_redis
     ports:
       - "6379:6379"
     volumes:
@@ -113,13 +113,13 @@ services:
 
   employer-service:
     image: ${DOCKER_REGISTRY-}employerservice
-    container_name: jobpost_employer-service
+    container_name: jobportal_employer-service
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: APIs/EmployerService/JobPortal.EmployerService.API/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - VAULT_ADDR=http://jobpost_vault:8200
+      - ASPNETCORE_ENVIRONMENT=Release
+      - VAULT_ADDR=http://jobportal_vault:8200
       - VAULT_TOKEN=admin
     ports:
       - "5010:80"
@@ -131,20 +131,20 @@ services:
       rabbitmq:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://jobpost_employer-service:80/health"]
+      test: ["CMD", "curl", "-f", "http://jobportal_employer-service:80/health"]
       interval: 30s
       timeout: 10s
       retries: 3
 
   jobposting-service:
     image: ${DOCKER_REGISTRY-}jobpostingservice
-    container_name: jobpost_jobposting-service
+    container_name: jobportal_jobposting-service
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: APIs/JobPostingService/JobPortal.JobPostingService.API/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - VAULT_ADDR=http://jobpost_vault:8200
+      - ASPNETCORE_ENVIRONMENT=Release
+      - VAULT_ADDR=http://jobportal_vault:8200
       - VAULT_TOKEN=admin
     ports:
       - "5020:80"
@@ -158,7 +158,7 @@ services:
       rabbitmq:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://jobpost_jobposting-service:80/health"]
+      test: ["CMD", "curl", "-f", "http://jobportal_jobposting-service:80/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -168,22 +168,20 @@ services:
     container_name: jobportal_api-gateway
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: APIs/ApiGateway/Dockerfile
     ports:
       - "5000:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Release
-      - VAULT_ADDR=http://jobpost_vault:8200
+      - VAULT_ADDR=http://jobportal_vault:8200
       - VAULT_TOKEN=admin
       - APIGATEWAY_HOST=localhost
       - APIGATEWAY_PORT=5000
-      - EMPLOYER_SERVICE_HOST=employer-service
+      - EMPLOYER_SERVICE_HOST=jobportal_employer-service
       - EMPLOYER_SERVICE_PORT=5010
-      - JOB_POSTING_SERVICE_HOST=jobpost_jobposting-service
+      - JOB_POSTING_SERVICE_HOST=jobportal_jobposting-service
       - JOB_POSTING_SERVICE_PORT=5020
     depends_on:
-      vault:
-        condition: service_healthy
       employer-service:
         condition: service_healthy
       jobposting-service:
@@ -201,7 +199,3 @@ volumes:
   elasticsearch_data:
   rabbitmq_data:
   redis_data:
-
-networks:
-  default:
-    name: job-portal-network 
