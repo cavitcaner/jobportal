@@ -227,6 +227,33 @@
                         }
                     },
                     "response": []
+                },
+                {
+                    "name": "Get requirements for Create and Update",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "description": ""
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:5000/api/jobs/requirements",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "jobs",
+                                "requirements"
+                            ]
+                        }
+                    },
+                    "response": []
                 }
             ]
         },
