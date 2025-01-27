@@ -5,10 +5,10 @@ using JobPortal.JobPostingService.Application.DTOs;
 
 namespace JobPortal.JobPostingService.Application.CQRS.Queries.Benefits
 {
-    public class GetBenefitListQuery : IRequest<List<BenefitDto>>
+    public class GetBenefitListQuery : IRequest<List<ParamenterDto>>
     {
     }
-    public class GetBenefitListQueryHandler : IRequestHandler<GetBenefitListQuery, List<BenefitDto>>
+    public class GetBenefitListQueryHandler : IRequestHandler<GetBenefitListQuery, List<ParamenterDto>>
     {
         private readonly IBenefitService _benefitService;
         private readonly IMapper _mapper;
@@ -19,10 +19,10 @@ namespace JobPortal.JobPostingService.Application.CQRS.Queries.Benefits
             _mapper = mapper;
         }
 
-        public async Task<List<BenefitDto>> Handle(GetBenefitListQuery request, CancellationToken cancellationToken)
+        public async Task<List<ParamenterDto>> Handle(GetBenefitListQuery request, CancellationToken cancellationToken)
         {
             var benefits = await _benefitService.GetAllBenefitsAsync(cancellationToken);
-            return _mapper.Map<List<BenefitDto>>(benefits);
+            return _mapper.Map<List<ParamenterDto>>(benefits);
         }
     }
 }

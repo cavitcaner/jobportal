@@ -3,6 +3,7 @@ using JobPortal.JobPostingService.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using JobPortal.JobPostingService.Application.CQRS.Commands.JobPost;
+using JobPortal.JobPostingService.Application.CQRS.Queries.Benefits;
 
 namespace JobPortal.JobPostingService.API.Controllers
 {
@@ -88,6 +89,11 @@ namespace JobPortal.JobPostingService.API.Controllers
         {
             await _mediator.Send(command, cancellation);
             return Ok();
+        }
+        [HttpGet("requirements")]
+        public async Task<IActionResult> GetRequirementListAsync(CancellationToken cancellation)
+        {
+            return Ok(await _mediator.Send(new GetRequirementListQuery(), cancellation));
         }
     }
 }

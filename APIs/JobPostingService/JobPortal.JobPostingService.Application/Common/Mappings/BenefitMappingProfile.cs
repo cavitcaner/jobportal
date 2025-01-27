@@ -8,7 +8,7 @@ namespace JobPortal.JobPostingService.Application.Common.Mappings
     {
         public BenefitMappingProfile()
         { 
-            CreateMap<Benefit, BenefitDto>();
+            CreateMap<Benefit, ParamenterDto>();
         }
     }
 }

@@ -78,6 +78,17 @@
       ]
     },
     {
+      "DownstreamPathTemplate": "/api/jobs/requirements",
+      "UpstreamPathTemplate": "/api/jobs/requirements",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "${JOB_POSTING_SERVICE_HOST}",
+          "Port": "${JOB_POSTING_SERVICE_PORT}"
+        }
+      ]
+    },
+    {
       "DownstreamPathTemplate": "/api/hate-words",
       "UpstreamPathTemplate": "/api/hate-words",
       "UpstreamHttpMethod": [ "GET", "POST" ],
