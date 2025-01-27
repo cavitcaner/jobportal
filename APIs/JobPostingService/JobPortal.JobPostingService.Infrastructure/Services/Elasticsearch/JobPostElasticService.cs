@@ -20,6 +20,9 @@ namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
 
         public async Task<JobPostElasticModel> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
+            if (!(await _elasticClient.Indices.ExistsAsync(_indexName)).Exists)
+                return default;
+
             var response = await _elasticClient.GetAsync<JobPostElasticModel>(id, x => x.Index(_indexName), cancellationToken);
 
             if (!response.IsValid)
@@ -51,6 +54,9 @@ namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
 
         public async Task<IEnumerable<JobPostElasticModel>> SearchDataAsync(string query, CancellationToken cancellationToken)
         {
+            if (!(await _elasticClient.Indices.ExistsAsync(_indexName)).Exists)
+                return default;
+
             var searchResponse = await _elasticClient.SearchAsync<JobPostElasticModel>(s => s
                 .Index(_indexName)
                 .Query(q => q
@@ -82,6 +88,9 @@ namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
 
         public async Task<IEnumerable<JobPostElasticModel>> GetAllDataAsync(CancellationToken cancellationToken)
         {
+            if (!(await _elasticClient.Indices.ExistsAsync(_indexName)).Exists)
+                return default;
+
             var searchResponse = await _elasticClient.SearchAsync<JobPostElasticModel>(s => s
                 .Index(_indexName)
                 .Query(x => x.DateRange(r => r
@@ -103,6 +112,9 @@ namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
 
         public async Task<int> GetCountByEmployerIdAsync(Guid employerId, CancellationToken cancellationToken)
         {
+            if (!(await _elasticClient.Indices.ExistsAsync(_indexName)).Exists)
+                return 0;
+
             var countResponse = await _elasticClient.CountAsync<JobPostElasticModel>(c => c
                 .Index(_indexName)
                 .Query(q => q.Term(b => b.EmployerId, employerId))

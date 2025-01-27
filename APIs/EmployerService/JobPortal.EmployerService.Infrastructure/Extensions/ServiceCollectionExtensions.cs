@@ -14,15 +14,28 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEmployerService, Services.EmployerService>();
         services.AddMassTransit(x =>
         {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                var rabbitMqConnectionString = configuration.GetSection("RabbitMQ:ConnectionString").Value;
+                cfg.Host(new Uri(rabbitMqConnectionString), h => { });
+
+
+                cfg.ReceiveEndpoint("GetEmployerJobPostingLimitEventRequest", x =>
+                {
+                    x.ConfigureConsumer<GetEmployerJobPostingLimitConsumer>(context);
+                });
+                cfg.ReceiveEndpoint("JobPostCreatedEventRequest", x =>
+                {
+                    x.ConfigureConsumer<JobPostCreatedEventConsumer>(context);
+                });
+            });
+
             x.AddConsumer<GetEmployerJobPostingLimitConsumer>();
             x.AddConsumer<JobPostCreatedEventConsumer>();
 
-            x.UsingRabbitMq((context, cfg) =>
-             {
-                 var rabbitMqConnectionString = configuration.GetSection("RabbitMQ:ConnectionString").Value;
-                 cfg.Host(new Uri(rabbitMqConnectionString), h => {});
-             });
         });
+
+        services.AddMassTransitHostedService();
 
         return services;
     }

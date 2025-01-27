@@ -1,32 +1,37 @@
+using JobPortal.Core.Events.EmployerEvents;
 using JobPortal.Core.Events.JobEvents;
 using JobPortal.JobPostingService.Application.Interfaces.EventServices;
 using MassTransit;
 
-public class EmployerEventService : IEmployerEventService
+namespace JobPortal.JobPostingService.Infrastructure
 {
-    private readonly IRequestClient<GetEmployerJobPostingLimitEventRequest> _client;
-    private readonly IPublishEndpoint _publishEndpoint;
 
-    public EmployerEventService(
-        IRequestClient<GetEmployerJobPostingLimitEventRequest> client,
-        IPublishEndpoint publishEndpoint)
+    public class EmployerEventService : IEmployerEventService
     {
-        _client = client;
-        _publishEndpoint = publishEndpoint;
-    }
+        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly IBusControl _bus;
 
-    public async Task<int> GetEmployerJobPostingLimit(Guid employerId)
-    {
-        var response = await _client.GetResponse<GetEmployerJobPostingLimitEventResponse>(new GetEmployerJobPostingLimitEventRequest 
-        { 
-            EmployerId = employerId 
-        });
+        public EmployerEventService(
+            IPublishEndpoint publishEndpoint,
+            IBusControl bus)
+        {
+            _publishEndpoint = publishEndpoint;
+            _bus = bus;
+        }
 
-        return response.Message.LimitOfJobPosting;
-    }
+        public async Task<GetEmployerJobPostingLimitEventResponse> GetEmployerJobPostingLimit(Guid employerId)
+        {
+            var response = await _bus.Request<GetEmployerJobPostingLimitEventRequest, GetEmployerJobPostingLimitEventResponse>(new GetEmployerJobPostingLimitEventRequest
+            {
+                EmployerId = employerId
+            });
 
-    public async Task SendJobPostCreatedEventAsync(JobPostCreatedEventRequest body)
-    {
-        await _publishEndpoint.Publish(body);
+            return response.Message;
+        }
+
+        public async Task SendJobPostCreatedEventAsync(JobPostCreatedEventRequest body)
+        {
+            await _publishEndpoint.Publish(body);
+        }
     }
-} 
+}

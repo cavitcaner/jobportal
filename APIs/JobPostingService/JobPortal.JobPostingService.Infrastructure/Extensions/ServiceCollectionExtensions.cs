@@ -7,6 +7,7 @@ using JobPortal.JobPostingService.Infrastructure.Cache.MemoryCache;
 using Microsoft.Extensions.Caching.Memory;
 using JobPortal.JobPostingService.Application.Interfaces.EventServices;
 using MassTransit;
+using JobPortal.Core.Events.EmployerEvents;
 
 namespace JobPortal.JobPostingService.Infrastructure.Extensions
 {
@@ -25,16 +26,20 @@ namespace JobPortal.JobPostingService.Infrastructure.Extensions
             services.AddScoped<IPositionService, PositionService>();
             services.AddScoped<IWorkingMethodService, WorkingMethodService>();
 
-            services.AddMassTransit(x =>
-                  {
-                      x.UsingRabbitMq((context, cfg) =>
-                       {
-                           var rabbitMqConnectionString = configuration.GetSection("RabbitMQ:ConnectionString").Value;
-                           cfg.Host(new Uri(rabbitMqConnectionString), h => { });
-                       });
-                  });
-            
             services.AddScoped<IEmployerEventService, EmployerEventService>();
+
+            services.AddMassTransit(x =>
+            {
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    var rabbitMqConnectionString = configuration.GetSection("RabbitMQ:ConnectionString").Value;
+                    cfg.Host(new Uri(rabbitMqConnectionString), h => { });
+                });
+
+            });
+
+            services.AddMassTransitHostedService();
+
 
             return services;
         }

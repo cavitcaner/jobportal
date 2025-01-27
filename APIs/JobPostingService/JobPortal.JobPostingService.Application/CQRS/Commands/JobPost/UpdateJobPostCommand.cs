@@ -50,8 +50,6 @@ namespace JobPortal.JobPostingService.Application.CQRS.Commands.JobPost
 
             try
             {
-                //TODO: employer servisinden employer ilan yayınlama hakkı çekilmesi gerek
-
                 var jobPost = await _jobPostService.GetJobPostByIdAsync(request.JobPost.Id, cancellationToken);
 
                 ExceptionHelper.ThrowIfNullOrEmpty(jobPost, "İlan bulunamadı!");
@@ -70,8 +68,6 @@ namespace JobPortal.JobPostingService.Application.CQRS.Commands.JobPost
 
                 var elasticModel = _mapper.Map<JobPostElasticModel>(jobPost);
                 await _jobPostElasticService.IndexDataAsync(elasticModel, cancellationToken);
-
-                //publish event JobPostCreatedEvent
 
                 await _unitOfWork.CommitAsync(cancellationToken);
 
@@ -98,10 +94,6 @@ namespace JobPortal.JobPostingService.Application.CQRS.Commands.JobPost
             RuleFor(x => x.JobPost.Description)
                 .NotEmpty().WithMessage("Açıklama alanı boş olamaz.")
                 .MaximumLength(2000).WithMessage("Açıklama 2000 karakterden uzun olamaz.");
-
-            RuleFor(x => x.JobPost.CompanyName)
-                .NotEmpty().WithMessage("Şirket adı boş olamaz.")
-                .MaximumLength(100).WithMessage("Şirket adı 100 karakterden uzun olamaz.");
 
             RuleFor(x => x.JobPost.PositionId)
                 .Must(x => x != Guid.Empty).WithMessage("Pozisyon bilgisi boş olamaz.");

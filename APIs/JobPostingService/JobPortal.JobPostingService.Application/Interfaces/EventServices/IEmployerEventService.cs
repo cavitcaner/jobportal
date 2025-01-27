@@ -1,4 +1,5 @@
-﻿using JobPortal.Core.Events.JobEvents;
+﻿using JobPortal.Core.Events.EmployerEvents;
+using JobPortal.Core.Events.JobEvents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace JobPortal.JobPostingService.Application.Interfaces.EventServices
 
     public interface IEmployerEventService
     {
-        Task<int> GetEmployerJobPostingLimit(Guid employerId);
+        Task<GetEmployerJobPostingLimitEventResponse> GetEmployerJobPostingLimit(Guid employerId);
         Task SendJobPostCreatedEventAsync(JobPostCreatedEventRequest body);
     }
 }
