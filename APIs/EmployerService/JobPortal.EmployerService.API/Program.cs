@@ -21,7 +21,7 @@ namespace JobPortal.EmployerService.API
             {
                 await ConfigureVault(builder);
 
-                EmployerStatics.DefaultLimitOfJobPosts = builder.Configuration.GetSection("EmployerSettings:DefaultLimitOfJobPosts").Get<short>();
+                EmployerStatics.DefaultLimitOfJobPosts = builder.Configuration.GetSection("EmployerSettings:DefaultLimitOfJobPosts").Get<int>();
 
                 // Add services to the container.
 
@@ -45,7 +45,7 @@ namespace JobPortal.EmployerService.API
 
                 var app = builder.Build();
 
-               // if (app.Environment.IsDevelopment())
+                // if (app.Environment.IsDevelopment())
                 {
                     app.UseSwagger();
                     app.UseSwaggerUI();
@@ -102,9 +102,12 @@ namespace JobPortal.EmployerService.API
                 {
                     throw new Exception("Vault is not initialized!");
                 }
-
+                var secretKey = "JobPost";
+#if DEBUG
+                secretKey += "-dev";
+#endif
                 var secrets = await vaultClient.V1.Secrets.KeyValue.V2.ReadSecretAsync<Dictionary<string, string>>(
-                    "JobPost",
+                    secretKey,
                     mountPoint: "secret"
                 );
 

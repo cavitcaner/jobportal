@@ -26,6 +26,7 @@ namespace JobPortal.Core.Redis
 
         public virtual async Task<List<T>?> GetListAsync()
         {
+            var isExists = RedisDb.KeyExists(Key);
             var value = await RedisDb.StringGetAsync(Key);
             if (value.IsNull)
                 return default;

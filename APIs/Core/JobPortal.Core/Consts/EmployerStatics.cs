@@ -2,6 +2,6 @@ namespace JobPortal.Core.Statics
 {
     public static class EmployerStatics
     {
-        public static short DefaultLimitOfJobPosts { get; set; } = 2;
+        public static int DefaultLimitOfJobPosts { get; set; } = 2;
     }
 }

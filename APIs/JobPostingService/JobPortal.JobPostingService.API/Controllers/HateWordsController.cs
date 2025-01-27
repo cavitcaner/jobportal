@@ -1,4 +1,4 @@
-using JobPortal.JobPostingService.Infrastructure.Cache.Redis;
+using JobPortal.JobPostingService.Infrastructure.Cache.MemoryCache;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobPortal.JobPostingService.API.Controllers
@@ -7,17 +7,17 @@ namespace JobPortal.JobPostingService.API.Controllers
     [Route("api/[controller]/hate-words")]
     public class HateWordsController : ControllerBase
     {
-        private readonly HateWordsRedisService _hateWordsRedisService;
+        private readonly HateWordsCacheService _hateWordsCacheService;
 
-        public HateWordsController(HateWordsRedisService hateWordsRedisService)
+        public HateWordsController(HateWordsCacheService hateWordsCacheService)
         {
-            _hateWordsRedisService = hateWordsRedisService;
+            _hateWordsCacheService = hateWordsCacheService;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<string>>> GetHateWords()
         {
-            var hateWords = await _hateWordsRedisService.GetListAsync();
+            var hateWords = await _hateWordsCacheService.GetListAsync();
             if (hateWords == null || !hateWords.Any())
                 return NotFound("No hate words found in Redis.");
 
@@ -36,7 +36,7 @@ namespace JobPortal.JobPostingService.API.Controllers
                 .Distinct()
                 .ToList();
 
-            await _hateWordsRedisService.SetAsync(hateWords, TimeSpan.FromDays(365));
+            await _hateWordsCacheService.SetAsync(hateWords, TimeSpan.FromDays(365));
 
             return Ok(new 
             { 

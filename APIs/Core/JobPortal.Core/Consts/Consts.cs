@@ -7,9 +7,9 @@
             //public const string JobPostsElasticIndex = "jobposts";
         }
 
-        public class RedisKeys
+        public class CacheKeys
         {
-            public const string HateWordsRedisKey = "HateWords";
+            public const string HateWordsKey = "HateWords";
         }
     }
 }

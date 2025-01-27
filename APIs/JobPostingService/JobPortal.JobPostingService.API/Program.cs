@@ -15,6 +15,8 @@ using JobPortal.JobPostingService.Application.CQRS.Commands.JobPost;
 using System.Reflection;
 using JobPortal.JobPostingService.Application.Common.Mappings;
 using StackExchange.Redis;
+using Microsoft.Extensions.Caching.Memory;
+using JobPortal.Core.Statics;
 
 namespace JobPortal.JobPostingService.API
 {
@@ -28,7 +30,7 @@ namespace JobPortal.JobPostingService.API
             {
                 // Vault'u yapılandır ve bağlan
                 await ConfigureVault(builder);
-                
+
                 builder.Configuration
                     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
                     .Build();
@@ -53,17 +55,33 @@ namespace JobPortal.JobPostingService.API
                         .DefaultIndex("default-index");
                     return new ElasticClient(settings);
                 });
-                builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-                {
-                    var configuration = sp.GetRequiredService<IConfiguration>();
-                    var redisConnection = configuration.GetValue<string>("Redis:ConnectionString");
-                    return ConnectionMultiplexer.Connect(redisConnection);
-                });
 
                 var app = builder.Build();
 
+                using (var scope = app.Services.CreateScope())
+                {
+                    var cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
+                    cache.Set(Consts.CacheKeys.HateWordsKey, new List<string>
+                    {
+                        "madara",
+                        "nanay",
+                        "parlak",
+                        "pinpon",
+                        "saksı",
+                        "gıcık",
+                        "gaga",
+                        "enayi",
+                        "düdük",
+                        "çakmak",
+                        "babaçko",
+                        "armut",
+                        "akmak",
+                        "arakçı"
+                    }, TimeSpan.FromDays(365));
+                }
+
                 // Configure the HTTP request pipeline.
-               // if (app.Environment.IsDevelopment())
+                // if (app.Environment.IsDevelopment())
                 {
                     app.UseSwagger();
                     app.UseSwaggerUI();
@@ -94,7 +112,7 @@ namespace JobPortal.JobPostingService.API
                 var vaultToken = Environment.GetEnvironmentVariable("VAULT_TOKEN") ?? "admin";
 
                 Console.WriteLine($"Vault Adresi: {vaultAddress}");
-                
+
                 var vaultClientSettings = new VaultClientSettings(
                     vaultAddress,
                     new TokenAuthMethodInfo(vaultToken)
@@ -119,8 +137,12 @@ namespace JobPortal.JobPostingService.API
                     throw new Exception("Vault başlatılmamış veya mühürlenmiş durumda!");
                 }
 
+                var secretKey = "JobPost";
+#if DEBUG
+                secretKey += "-dev";
+#endif
                 var secrets = await vaultClient.V1.Secrets.KeyValue.V2.ReadSecretAsync<Dictionary<string, string>>(
-                    "JobPost",
+                    secretKey,
                     mountPoint: "secret"
                 );
 
@@ -132,12 +154,12 @@ namespace JobPortal.JobPostingService.API
                 var configuration = new ConfigurationBuilder()
                     .AddInMemoryCollection(secrets.Data.Data)
                     .Build();
-                
+
                 builder.Configuration.AddConfiguration(configuration);
 
                 // Health checks ekle
                 builder.Services.AddHealthChecks()
-                    .AddCheck("vault",  x =>
+                    .AddCheck("vault", x =>
                     {
                         try
                         {

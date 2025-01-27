@@ -1,12 +1,8 @@
 ﻿using JobPortal.Core.Statics;
 using JobPortal.JobPostingService.Application.DTOs.Elasticsearch;
 using JobPortal.JobPostingService.Application.Interfaces;
+using JobPortal.JobPostingService.Infrastructure.Cache.MemoryCache;
 using Nest;
-using System.Reflection.Metadata;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using Microsoft.Extensions.Configuration;
-using JobPortal.Core.Redis;
-using JobPortal.JobPostingService.Infrastructure.Cache.Redis;
 
 namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
 {
@@ -14,11 +10,11 @@ namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
     {
         private readonly IElasticClient _elasticClient;
         private const string _indexName = "jobposts";
-        private readonly HateWordsRedisService _hateWordsRedisService;
-        public JobPostElasticService(IElasticClient elasticClient, HateWordsRedisService hateWordsRedisService)
+        private readonly HateWordsCacheService _hateWordsCacheService;
+        public JobPostElasticService(IElasticClient elasticClient, HateWordsCacheService hateWordsCacheService)
         {
             _elasticClient = elasticClient;
-            _hateWordsRedisService = hateWordsRedisService;
+            _hateWordsCacheService = hateWordsCacheService;
         }
 
         public async Task<JobPostElasticModel> GetByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -39,11 +35,12 @@ namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
 
         public async Task IndexDataAsync(JobPostElasticModel entity, CancellationToken cancellationToken)
         {
-            List<string> hateWordList = await _hateWordsRedisService.GetListAsync();
+            List<string>? hateWordList = await _hateWordsCacheService.GetListAsync();
 
-            entity.CalculateJobPoint(hateWordList);
+            if (hateWordList != null)
+                entity.CalculateJobPoint(hateWordList);
 
-            var response = await _elasticClient.IndexAsync(entity, i => i .Index(_indexName), cancellationToken);
+            var response = await _elasticClient.IndexAsync(entity, i => i.Index(_indexName), cancellationToken);
 
             if (!response.IsValid)
             {
