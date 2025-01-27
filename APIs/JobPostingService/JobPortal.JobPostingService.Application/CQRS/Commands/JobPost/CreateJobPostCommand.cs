@@ -1,5 +1,6 @@
 using AutoMapper;
 using FluentValidation;
+using JobPortal.Core.Events.EmployerEvents;
 using JobPortal.Core.Helpers;
 using JobPortal.Core.Repository;
 using JobPortal.Core.UnitOfWork;
@@ -29,22 +30,29 @@ namespace JobPortal.JobPostingService.Application.CQRS.Commands.JobPost
         private readonly IJobPostElasticService _jobPostElasticService;
         private readonly IJobPostService _jobPostService;
         private readonly IEmployerEventService _employerEventService;
-        private readonly IGenericRepository<Benefit> _genericRepository;
+        private readonly IGenericRepository<Benefit> _benefitRepository;
+        private readonly IGenericRepository<WorkingMethod> _wmRepository;
+        private readonly IGenericRepository<Position> _positionRepository;
 
         public CreateJobPostCommandHandler(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             IJobPostService jobPostService,
             IJobPostElasticService jobPostElasticService,
-            IEmployerEventService employerEventService,
-            IGenericRepository<Benefit> genericRepository)
+            IEmployerEventService employerEventService
+,
+            IGenericRepository<Benefit> benefitRepository,
+            IGenericRepository<WorkingMethod> wmRepository,
+            IGenericRepository<Position> positionRepository)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _jobPostService = jobPostService;
             _jobPostElasticService = jobPostElasticService;
             _employerEventService = employerEventService;
-            _genericRepository = genericRepository;
+            _benefitRepository = benefitRepository;
+            _wmRepository = wmRepository;
+            _positionRepository = positionRepository;
         }
 
         public async Task<Guid> Handle(CreateJobPostCommand request, CancellationToken cancellationToken)
@@ -58,15 +66,7 @@ namespace JobPortal.JobPostingService.Application.CQRS.Commands.JobPost
 
                 var totalPostsEmployer = await _jobPostElasticService.GetCountByEmployerIdAsync(request.JobPost.EmployerId, cancellationToken);
                 ExceptionHelper.ThrowIf(response.LimitOfJobPosting == 0 || response.LimitOfJobPosting <= totalPostsEmployer, "İlan yayımlama hakkınız bulunmamaktadır.");
-
-                var jobPost = _mapper.Map<Domain.Entities.JobPost>(request.JobPost);
-                jobPost.ExpirationDate = DateTime.Now.AddDays(15);
-                jobPost.CompanyName = response.CompanyName;
-                if (request.JobPost.Benefits?.Count > 0)
-                {
-                    var benefits = await _genericRepository.GetAllAsync(cancellationToken);
-                    jobPost.Benefits = benefits.Where(x => request.JobPost.Benefits.Contains(x.Id)).ToList();
-                }
+                Domain.Entities.JobPost jobPost = await PrepareModel(request, response, cancellationToken);
                 await _jobPostService.CreateJobPostAsync(jobPost, cancellationToken);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -81,12 +81,39 @@ namespace JobPortal.JobPostingService.Application.CQRS.Commands.JobPost
 
                 return jobPost.Id;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _unitOfWork.RollbackAsync(cancellationToken);
                 throw;
             }
 
+        }
+
+        private async Task<Domain.Entities.JobPost> PrepareModel(CreateJobPostCommand request, GetEmployerJobPostingLimitEventResponse? response, CancellationToken cancellationToken)
+        {
+            var jobPost = _mapper.Map<Domain.Entities.JobPost>(request.JobPost);
+            jobPost.ExpirationDate = DateTime.Now.AddDays(15);
+            jobPost.CompanyName = response.CompanyName;
+
+            if (request.JobPost.Benefits?.Count > 0)
+            {
+                var benefits = await _benefitRepository.GetAllAsync(cancellationToken);
+                jobPost.Benefits = benefits.Where(x => request.JobPost.Benefits.Contains(x.Id)).ToList();
+            }
+
+            if (request.JobPost.WorkingMethodId != Guid.Empty)
+            {
+                jobPost.WorkingMethod = await _wmRepository.GetByIdAsync(request.JobPost.WorkingMethodId.Value, cancellationToken);
+                ExceptionHelper.ThrowIfNullOrEmpty(jobPost.WorkingMethod, "Çalışma Tipi Bulunamadı.");
+            }
+
+            if (request.JobPost.PositionId != Guid.Empty)
+            {
+                jobPost.Position = await _positionRepository.GetByIdAsync(request.JobPost.PositionId, cancellationToken);
+                ExceptionHelper.ThrowIfNullOrEmpty(jobPost.Position, "Pozisyon Bulunamadı.");
+            }
+
+            return jobPost;
         }
     }
 
