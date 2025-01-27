@@ -108,7 +108,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"title\": \"Software Engineer\", \"description\": \"Develop and maintain software applications.\", \"company\": \"Tech Company\", \"location\": \"Istanbul\"}"
+                            "raw": "{  \"jobPost\": {    \"title\": \"string\",    \"description\": \"string\",    \"requirements\": \"string\",    \"location\": \"string\",    \"salary\": 0,    \"employerId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",    \"companyName\": \"string\",    \"positionId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",    \"workingMethodId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",    \"benefits\": [      \"3fa85f64-5717-4562-b3fc-2c963f66afa6\"    ]  }}"
                         },
                         "url": {
                             "raw": "http://localhost:5000/api/jobs",
@@ -179,7 +179,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"title\": \"Updated Job Title\", \"description\": \"Updated description.\"}"
+                            "raw": "{  \"jobPost\": {    \"title\": \"string\",    \"description\": \"string\",    \"requirements\": \"string\",    \"location\": \"string\",    \"salary\": 0,    \"employerId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",    \"companyName\": \"string\",    \"positionId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",    \"workingMethodId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",    \"benefits\": [      \"3fa85f64-5717-4562-b3fc-2c963f66afa6\"    ],    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",    \"expirationDate\": \"2025-01-27T07:04:06.559Z\"  }}"
                         },
                         "url": {
                             "raw": "http://localhost:5000/api/jobs/{{jobId}}",
@@ -210,7 +210,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"mockData\": \"example\"}"
+                            "raw": "{\"amount\":0}"
                         },
                         "url": {
                             "raw": "http://localhost:5000/api/jobs/create-mock",
@@ -246,7 +246,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\": \"Tech Company\", \"location\": \"Istanbul\", \"industry\": \"Software\"}"
+                            "raw": "{\"employer\":{\"identityRefId\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"phoneNumber\":\"string\",\"address\":\"string\",\"companyName\":\"Ca\"}}"
                         },
                         "url": {
                             "raw": "http://localhost:5000/api/employers",
@@ -317,7 +317,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\": \"Updated Company\", \"location\": \"Updated Location\", \"industry\": \"Updated Industry\"}"
+                            "raw": "{\"employer\":{\"identityRefId\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"phoneNumber\":\"string\",\"address\":\"string\",\"companyName\":\"Ca\", \"LimitOfJobPosting\": 0}}"
                         },
                         "url": {
                             "raw": "http://localhost:5000/api/employers/{{employerId}}",
