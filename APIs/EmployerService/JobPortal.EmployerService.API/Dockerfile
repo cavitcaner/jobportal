@@ -13,5 +13,9 @@ RUN dotnet publish "JobPortal.EmployerService.API.csproj" -c Release -o /app/pub
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
+
+# Health check
+RUN apt-get update && apt-get install -y curl
+
 ENTRYPOINT ["sh", "-c", "dotnet ef database update && dotnet JobPortal.EmployerService.Persistence.dll"]
 ENTRYPOINT ["dotnet", "JobPortal.EmployerService.API.dll"] 

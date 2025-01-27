@@ -90,7 +90,7 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:7084",
+    "BaseUrl": "http://${APIGATEWAY_HOST}:${APIGATEWAY_PORT}",
     "DownstreamScheme": "http"
   }
 }
