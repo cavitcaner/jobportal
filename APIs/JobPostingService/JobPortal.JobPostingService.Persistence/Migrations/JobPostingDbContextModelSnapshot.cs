@@ -92,7 +92,7 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                         {
                             Id = new Guid("53c068c9-f42b-41e7-ba66-3042fa76d8ea"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Yıllık İzin"
+                            Name = "Mazeret İzin"
                         },
                         new
                         {
@@ -262,18 +262,6 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                             Id = new Guid("b47aef00-3343-4436-9d7f-d52683ce4cf6"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Yarı Zamanlı"
-                        },
-                        new
-                        {
-                            Id = new Guid("9f930531-9ef9-4d3e-bb49-0ae2bf8129d3"),
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Uzaktan"
-                        },
-                        new
-                        {
-                            Id = new Guid("a6f5f822-51cc-4701-a7c2-eb25d47c9ae5"),
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Hibrit"
                         },
                         new
                         {

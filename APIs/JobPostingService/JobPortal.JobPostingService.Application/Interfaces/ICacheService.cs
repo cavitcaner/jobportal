@@ -1,5 +1,4 @@
-﻿using JobPortal.JobPostingService.Domain.Entities;
-namespace JobPortal.JobPostingService.Application.Interfaces
+﻿namespace JobPortal.JobPostingService.Application.Interfaces
 {
     public interface ICacheService<T>
     {
