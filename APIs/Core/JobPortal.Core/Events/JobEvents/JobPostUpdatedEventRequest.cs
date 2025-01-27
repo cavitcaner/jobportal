@@ -1,6 +1,6 @@
 namespace JobPortal.Core.Events.JobEvents
 {
-    public class JobPostUpdatedEvent : IEvent
+    public class JobPostUpdatedEventRequest : IEvent
     {
         public Guid Id { get; set; }
         public Guid EmployerId { get; set; }

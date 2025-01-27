@@ -7,7 +7,7 @@ using JobPortal.JobPostingService.Application.CQRS.Commands.JobPost;
 namespace JobPortal.JobPostingService.API.Controllers
 {
     [ApiController]
-    [Route("[controller]/jobs")]
+    [Route("api/jobs/")]
     public class JobPostController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -23,7 +23,7 @@ namespace JobPortal.JobPostingService.API.Controllers
         /// <param name="query"></param>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        [HttpPost("/search")]
+        [HttpPost("search")]
         public async Task<IActionResult> SearchJobPostAsync(SearchJobPostsQuery query, CancellationToken cancellation)
         {
             return Ok(await _mediator.Send(query, cancellation));
@@ -59,7 +59,7 @@ namespace JobPortal.JobPostingService.API.Controllers
         /// <param name="id">postjob.id</param>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetJobPostAsync(Guid id, CancellationToken cancellation)
         {
             return Ok(await _mediator.Send(new GetJobPostByIdQuery { Id = id }, cancellation));
@@ -71,7 +71,7 @@ namespace JobPortal.JobPostingService.API.Controllers
         /// <param name="command"></param>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        [HttpPut("/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateJobPostAsync(UpdateJobPostCommand command, CancellationToken cancellation)
         {
             await _mediator.Send(command, cancellation);
@@ -83,7 +83,7 @@ namespace JobPortal.JobPostingService.API.Controllers
         /// </summary>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        [HttpPost("/create-mock")]
+        [HttpPost("create-mock")]
         public async Task<IActionResult> CreatesMockJobPostsAsync(CreateMockJobPostCommand command, CancellationToken cancellation)
         {
             await _mediator.Send(command, cancellation);

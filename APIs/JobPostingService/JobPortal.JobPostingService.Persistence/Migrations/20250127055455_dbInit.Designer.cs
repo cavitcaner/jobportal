@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JobPortal.JobPostingService.Persistence.Migrations
 {
     [DbContext(typeof(JobPostingDbContext))]
-    [Migration("20250127041932_dbInit")]
+    [Migration("20250127055455_dbInit")]
     partial class dbInit
     {
         /// <inheritdoc />
@@ -109,9 +109,6 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("CompanyName")

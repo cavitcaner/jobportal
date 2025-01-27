@@ -10,7 +10,6 @@ namespace JobPortal.JobPostingService.Application.DTOs
         public string Location { get; set; }
         public decimal Salary { get; set; }
         public Guid EmployerId { get; set; }
-        public Guid CompanyId { get; set; }
         public string CompanyName { get; set; }
         public Guid PositionId { get; set; }
         public Guid? WorkingMethodId { get; set; }

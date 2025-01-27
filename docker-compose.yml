@@ -84,7 +84,8 @@ services:
         sleep 2;
         vault secrets enable -path=secret kv-v2 || true;
         vault kv put secret/JobPost \
-          ConnectionStrings:DefaultConnection="Host=jobportal_postgres-db;Port=5432;Database=JobPortal;Username=postgres;Password=123456;" \
+          ConnectionStrings:EmployerServiceString="Host=jobportal_postgres-db;Port=5432;Database=JobPortal_Employer;Username=postgres;Password=123456;" \
+          ConnectionStrings:JobPostingServiceString="Host=jobportal_postgres-db;Port=5432;Database=JobPortal_JobPosting;Username=postgres;Password=123456;" \
           EmployerSettings:DefaultLimitOfJobPosts="2" \
           Elasticsearch:Url="http://jobportal_elasticsearch:9200" \
           RabbitMQ:ConnectionString="amqp://admin:123456@jobportal_rabbitmq:5672"

@@ -8,6 +8,8 @@ using JobPortal.Core.UnitOfWork;
 using JobPortal.EmployerService.Application.Extensions;
 using Nest;
 using System.Reflection;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
 
 namespace JobPortal.EmployerService.API
 {
@@ -35,7 +37,7 @@ namespace JobPortal.EmployerService.API
                 });
                 builder.Services.AddPersistenceServices(builder.Configuration);
                 builder.Services.AddApplicationServices();
-                builder.Services.AddInfrastructureServices();
+                builder.Services.AddInfrastructureServices(builder.Configuration);
                 builder.Services.AddSingleton<IElasticClient>(sp =>
                 {
                     var elasticUrl = builder.Configuration.GetValue<string>("Elasticsearch:Url");
@@ -43,7 +45,14 @@ namespace JobPortal.EmployerService.API
                     return new ElasticClient(settings);
                 });
 
+
                 var app = builder.Build();
+
+                using (var scope = app.Services.CreateScope())
+                {
+                    var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
+                    dbContext.Database.Migrate();
+                }
 
                 // if (app.Environment.IsDevelopment())
                 {
@@ -52,8 +61,6 @@ namespace JobPortal.EmployerService.API
                 }
 
                 app.MapHealthChecks("/health");
-
-                app.UseHttpsRedirection();
 
                 app.UseAuthorization();
 

@@ -17,6 +17,8 @@ using JobPortal.JobPostingService.Application.Common.Mappings;
 using StackExchange.Redis;
 using Microsoft.Extensions.Caching.Memory;
 using JobPortal.Core.Statics;
+using MassTransit;
+using System.Configuration;
 
 namespace JobPortal.JobPostingService.API
 {
@@ -47,7 +49,7 @@ namespace JobPortal.JobPostingService.API
                 });
                 builder.Services.AddPersistenceServices(builder.Configuration);
                 builder.Services.AddApplicationServices();
-                builder.Services.AddInfrastructureServices();
+                builder.Services.AddInfrastructureServices(builder.Configuration);
                 builder.Services.AddSingleton<IElasticClient>(sp =>
                 {
                     var elasticUrl = builder.Configuration.GetValue<string>("Elasticsearch:Url");
@@ -78,6 +80,10 @@ namespace JobPortal.JobPostingService.API
                         "akmak",
                         "arakçı"
                     }, TimeSpan.FromDays(365));
+
+                    var dbContext = scope.ServiceProvider.GetRequiredService<JobPostingDbContext>();
+                    var connStr = builder.Configuration.GetConnectionString("JobPostingServiceString");
+                    dbContext.Database.Migrate();
                 }
 
                 // Configure the HTTP request pipeline.
@@ -89,8 +95,6 @@ namespace JobPortal.JobPostingService.API
 
                 // Health checks ekle
                 app.MapHealthChecks("/health");
-
-                app.UseHttpsRedirection();
 
                 app.UseAuthorization();
 

@@ -31,5 +31,6 @@ namespace JobPortal.JobPostingService.Application.Interfaces
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<IEnumerable<JobPostElasticModel>> GetAllDataAsync(CancellationToken cancellationToken);
+        Task<int> GetCountByEmployerIdAsync(Guid employerId, CancellationToken cancellationToken);
     }
 }

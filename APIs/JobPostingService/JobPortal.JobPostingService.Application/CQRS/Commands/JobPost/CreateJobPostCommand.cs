@@ -1,9 +1,11 @@
 using AutoMapper;
 using FluentValidation;
+using JobPortal.Core.Helpers;
 using JobPortal.Core.UnitOfWork;
 using JobPortal.JobPostingService.Application.DTOs;
 using JobPortal.JobPostingService.Application.DTOs.Elasticsearch;
 using JobPortal.JobPostingService.Application.Interfaces;
+using JobPortal.JobPostingService.Application.Interfaces.EventServices;
 using JobPortal.JobPostingService.Domain.Entities;
 using MediatR;
 using Nest;
@@ -24,17 +26,20 @@ namespace JobPortal.JobPostingService.Application.CQRS.Commands.JobPost
         private readonly IMapper _mapper;
         private readonly IJobPostElasticService _jobPostElasticService;
         private readonly IJobPostService _jobPostService;
+        private readonly IEmployerEventService _employerEventService;
 
         public CreateJobPostCommandHandler(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             IJobPostService jobPostService,
-            IJobPostElasticService jobPostElasticService)
+            IJobPostElasticService jobPostElasticService,
+            IEmployerEventService employerEventService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _jobPostService = jobPostService;
             _jobPostElasticService = jobPostElasticService;
+            _employerEventService = employerEventService;
         }
 
         public async Task<Guid> Handle(CreateJobPostCommand request, CancellationToken cancellationToken)
@@ -43,10 +48,11 @@ namespace JobPortal.JobPostingService.Application.CQRS.Commands.JobPost
 
             try
             {
-                //TODO: employer servisinden employer ilan yayınlama hakkı çekilmesi gerek
+                var limit = await _employerEventService.GetEmployerJobPostingLimit(request.JobPost.EmployerId);
+                var totalPostsEmployer = await _jobPostElasticService.GetCountByEmployerIdAsync(request.JobPost.EmployerId, cancellationToken);
+                ExceptionHelper.ThrowIf(limit == 0 || limit <= totalPostsEmployer, "İlan yayımlama hakkınız bulunmamaktadır.");
 
                 var jobPost = _mapper.Map<Domain.Entities.JobPost>(request.JobPost);
-
                 jobPost.ExpirationDate = DateTime.Now.AddDays(15);
 
                 if (request.JobPost.Benefits?.Count > 0)
@@ -55,15 +61,15 @@ namespace JobPortal.JobPostingService.Application.CQRS.Commands.JobPost
                 }
 
                 await _jobPostService.CreateJobPostAsync(jobPost, cancellationToken);
-
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
-
                 var elasticModel = _mapper.Map<JobPostElasticModel>(jobPost);
                 await _jobPostElasticService.IndexDataAsync(elasticModel, cancellationToken);
-
-                //publish event JobPostCreatedEvent
-
                 await _unitOfWork.CommitAsync(cancellationToken);
+
+                await _employerEventService.SendJobPostCreatedEventAsync(new Core.Events.JobEvents.JobPostCreatedEventRequest
+                {
+                    EmployerId = jobPost.EmployerId
+                });
 
                 return jobPost.Id;
             }

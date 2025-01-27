@@ -26,5 +26,6 @@ namespace JobPortal.JobPostingService.Infrastructure.Services
         {
             return await _genericRepository.GetAllAsync(cancellationToken);
         }
+
     }
 } 

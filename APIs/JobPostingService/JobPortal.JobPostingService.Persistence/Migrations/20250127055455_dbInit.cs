@@ -63,7 +63,6 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     EmployerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CompanyId = table.Column<Guid>(type: "uuid", nullable: false),
                     Requirements = table.Column<string>(type: "text", nullable: true),
                     CompanyName = table.Column<string>(type: "text", nullable: false),
                     Location = table.Column<string>(type: "text", nullable: true),

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using JobPortal.Core;
 using JobPortal.Core.UnitOfWork;
 using Microsoft.Extensions.Configuration;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace JobPortal.JobPostingService.Persistence.Extensions
 {
@@ -15,7 +16,7 @@ namespace JobPortal.JobPostingService.Persistence.Extensions
             services.AddDbContext<JobPostingDbContext>(options =>
             {
                 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+                options.UseNpgsql(configuration.GetConnectionString("JobPostingServiceString"));
             }); ;
             services.AddScoped<DbContext, JobPostingDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

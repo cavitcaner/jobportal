@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JobPortal.JobPostingService.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]/hate-words")]
+    [Route("api/hate-words")]
     public class HateWordsController : ControllerBase
     {
         private readonly HateWordsCacheService _hateWordsCacheService;

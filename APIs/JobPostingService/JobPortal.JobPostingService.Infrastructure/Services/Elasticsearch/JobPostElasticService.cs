@@ -3,6 +3,7 @@ using JobPortal.JobPostingService.Application.DTOs.Elasticsearch;
 using JobPortal.JobPostingService.Application.Interfaces;
 using JobPortal.JobPostingService.Infrastructure.Cache.MemoryCache;
 using Nest;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
 {
@@ -93,11 +94,26 @@ namespace JobPortal.JobPostingService.Infrastructure.Services.Elasticsearch
 
             if (!searchResponse.IsValid)
             {
-                throw new Exception($"Search failed: {searchResponse.OriginalException.Message}");
+                return default;
             }
 
             var jobPosts = searchResponse.Documents;
             return jobPosts;
+        }
+
+        public async Task<int> GetCountByEmployerIdAsync(Guid employerId, CancellationToken cancellationToken)
+        {
+            var countResponse = await _elasticClient.CountAsync<JobPostElasticModel>(c => c
+                .Index(_indexName)
+                .Query(q => q.Term(b => b.EmployerId, employerId))
+            );
+
+            if (!countResponse.IsValid)
+            {
+                throw new Exception($"Elasticsearch sayım hatası: {countResponse.ServerError?.Error}");
+            }
+
+            return (int)countResponse.Count;
         }
     }
 

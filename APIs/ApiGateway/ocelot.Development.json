@@ -2,7 +2,7 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/employers",
-      "UpstreamPathTemplate": "/employers",
+      "UpstreamPathTemplate": "/api/employers",
       "UpstreamHttpMethod": [ "GET", "POST" ],
       "DownstreamHostAndPorts": [
         {
@@ -13,7 +13,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/employers/{id}",
-      "UpstreamPathTemplate": "/employers/{id}",
+      "UpstreamPathTemplate": "/api/employers/{id}",
       "UpstreamHttpMethod": [ "GET", "PUT" ],
       "DownstreamHostAndPorts": [
         {
@@ -24,7 +24,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/employers/{id}/details",
-      "UpstreamPathTemplate": "/employers/{id}/details",
+      "UpstreamPathTemplate": "/api/employers/{id}/details",
       "UpstreamHttpMethod": [ "GET" ],
       "DownstreamHostAndPorts": [
         {
@@ -35,7 +35,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/jobs",
-      "UpstreamPathTemplate": "/jobs",
+      "UpstreamPathTemplate": "/api/jobs",
       "UpstreamHttpMethod": [ "GET", "POST" ],
       "DownstreamHostAndPorts": [
         {
@@ -46,7 +46,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/jobs/{id}",
-      "UpstreamPathTemplate": "/jobs/{id}",
+      "UpstreamPathTemplate": "/api/jobs/{id}",
       "UpstreamHttpMethod": [ "GET", "PUT" ],
       "DownstreamHostAndPorts": [
         {
@@ -57,7 +57,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/jobs/search",
-      "UpstreamPathTemplate": "/jobs/search",
+      "UpstreamPathTemplate": "/api/jobs/search",
       "UpstreamHttpMethod": [ "POST" ],
       "DownstreamHostAndPorts": [
         {
@@ -68,7 +68,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/jobs/create-mock",
-      "UpstreamPathTemplate": "/jobs/create-mock",
+      "UpstreamPathTemplate": "/api/jobs/create-mock",
       "UpstreamHttpMethod": [ "POST" ],
       "DownstreamHostAndPorts": [
         {
@@ -79,7 +79,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/hate-words",
-      "UpstreamPathTemplate": "/hate-words",
+      "UpstreamPathTemplate": "/api/hate-words",
       "UpstreamHttpMethod": [ "GET", "POST" ],
       "DownstreamHostAndPorts": [
         {

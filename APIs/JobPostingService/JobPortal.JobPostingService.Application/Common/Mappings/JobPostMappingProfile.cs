@@ -11,7 +11,7 @@ namespace JobPortal.JobPostingService.Application.Common.Mappings
     {
         public JobPostMappingProfile()
         {
-            CreateMap<JobPostCreatedEvent, JobPost>();
+            CreateMap<JobPostCreatedEventRequest, JobPost>();
 
             CreateMap<CreateJobPostRequestDto, JobPost>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())

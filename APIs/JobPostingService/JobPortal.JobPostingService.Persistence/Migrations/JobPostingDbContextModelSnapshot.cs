@@ -108,9 +108,6 @@ namespace JobPortal.JobPostingService.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("text");

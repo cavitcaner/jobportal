@@ -6,7 +6,7 @@ using JobPortal.EmployerService.Application.CQRS.Queries.Employer;
 namespace JobPortal.EmployeringService.API.Controllers
 {
     [ApiController]
-    [Route("[controller]/employers")]
+    [Route("/api/employers/")]
     public class EmployerController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -46,7 +46,7 @@ namespace JobPortal.EmployeringService.API.Controllers
         /// <param name="id">employer.id</param>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployerAsync(Guid id, CancellationToken cancellation)
         {
             return Ok(await _mediator.Send(new GetEmployerByIdQuery { Id = id }, cancellation));
@@ -58,7 +58,7 @@ namespace JobPortal.EmployeringService.API.Controllers
         /// <param name="id">employer.id</param>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        [HttpPut("/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEmployerAsync(Guid id, UpdateEmployerCommand command, CancellationToken cancellation)
         {
             command.Employer.Id = id;
@@ -72,7 +72,7 @@ namespace JobPortal.EmployeringService.API.Controllers
         /// <param name="id">employer.id</param>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        [HttpGet("/{id}/details")]
+        [HttpGet("{id}/details")]
         public async Task<IActionResult> GetEmployerDetailsAsync(Guid id, CancellationToken cancellation)
         {
             return Ok(await _mediator.Send(new GetEmployerDetailsByIdQuery { Id = id }, cancellation));

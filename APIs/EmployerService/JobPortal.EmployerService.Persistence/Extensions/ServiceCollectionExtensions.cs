@@ -12,7 +12,7 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<EmployerDbContext>(options =>
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+            options.UseNpgsql(configuration.GetConnectionString("EmployerServiceString"));
         }); ;
         services.AddScoped<DbContext, EmployerDbContext>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();

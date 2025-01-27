@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentValidation;
 using JobPortal.Core.Helpers;
+using JobPortal.Core.Statics;
 using JobPortal.Core.UnitOfWork;
 using JobPortal.EmployerService.Application.DTOs;
 using JobPortal.EmployerService.Application.Interfaces;
@@ -38,6 +39,7 @@ namespace JobPortal.EmployerService.Application.CQRS.Commands.Employer
             {
                 await _employerService.CheckIfExistsCompanyPhoneUniqueAsync(request.Employer.CompanyName, request.Employer.PhoneNumber, cancellationToken);
                 var employer = _mapper.Map<Domain.Entities.Employer>(request.Employer);
+                employer.LimitOfJobPosts = (short)EmployerStatics.DefaultLimitOfJobPosts;
                 await _employerService.CreateEmployerAsync(employer, cancellationToken);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 return employer.Id;

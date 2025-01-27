@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JobPortal.EmployerService.Persistence.Migrations
 {
     [DbContext(typeof(EmployerDbContext))]
-    [Migration("20250127042104_dbInit")]
+    [Migration("20250127055151_dbInit")]
     partial class dbInit
     {
         /// <inheritdoc />
